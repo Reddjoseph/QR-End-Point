@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Select Your Role — One Health Network</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080808;
+      --card: #100c0c;
+      --border: #2a1515;
+      --accent: #d72638;
+      --accent-dim: #8b1a26;
+      --text: #f5f0f0;
+      --muted: #5a4a4a;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      overflow-x: hidden;
+    }
+
+    /* Subtle grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .label {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      text-shadow: 0 0 18px rgba(215, 38, 56, 0.5);
+    }
+
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 10vw, 5rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      color: var(--text);
+    }
+
+    h1 span {
+      color: var(--accent);
+    }
+
+    .subtitle {
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 1.25rem 1.5rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .btn:nth-child(1) { animation-delay: 0.1s; }
+    .btn:nth-child(2) { animation-delay: 0.18s; }
+    .btn:nth-child(3) { animation-delay: 0.26s; }
+    .btn:nth-child(4) { animation-delay: 0.34s; }
+    .btn:nth-child(5) { animation-delay: 0.42s; }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--accent);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #130d0d;
+      border-color: #3a1a1a;
+      transform: translateX(4px);
+    }
+
+    .btn:hover::before {
+      transform: scaleY(1);
+    }
+
+    .btn:active {
+      transform: translateX(4px) scale(0.99);
+    }
+
+    .btn-icon {
+      font-size: 1.1rem;
+      opacity: 0.4;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .btn:hover .btn-icon {
+      opacity: 1;
+      transform: translateX(4px);
+    }
+
+    .btn-role {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .role-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.5;
+      flex-shrink: 0;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover .role-dot {
+      opacity: 1;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      font-size: 0.7rem;
+      color: #333;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: fadeUp 0.6s 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <p class="label">One Health Network</p>
+      <h1>Select Your<br/><span>Role</span></h1>
+      <p class="subtitle">Choose your position to continue</p>
+    </div>
+
+    <div class="grid">
+      <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c780f4b6a3f7521675e61b?pvs=105" target="_blank">
+        <div class="btn-role"><span class="role-dot"></span> Sales</div>
+        <span class="btn-icon">→</span>
+      </a>
+      <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c780338221c2c6211eefdb?pvs=105" target="_blank">
+        <div class="btn-role"><span class="role-dot"></span> Supervisor / Director</div>
+        <span class="btn-icon">→</span>
+      </a>
+      <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c7802d9cbbe520cb0d4dff?pvs=105" target="_blank">
+        <div class="btn-role"><span class="role-dot"></span> Accounting</div>
+        <span class="btn-icon">→</span>
+      </a>
+      <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c78092abcafe2c1a3853b2?pvs=105" target="_blank">
+        <div class="btn-role"><span class="role-dot"></span> Mobile Head / Operations</div>
+        <span class="btn-icon">→</span>
+      </a>
+      <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c7803c9f3fda73ceae85d1?pvs=105" target="_blank">
+        <div class="btn-role"><span class="role-dot"></span> Doctor</div>
+        <span class="btn-icon">→</span>
+      </a>
+    </div>
+
+    <p class="footer">© One Health Network — Internal Portal</p>
+  </div>
+</body>
+</html>

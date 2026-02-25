@@ -4,22 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Select Your Role — One Health Network</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #080808;
-      --card: #100c0c;
-      --border: #2a1515;
-      --accent: #d72638;
-      --accent-dim: #8b1a26;
-      --text: #f5f0f0;
-      --muted: #5a4a4a;
+      --bg: #e8f0fe;
+      --surface: #ffffff;
+      --blue: #1a56db;
+      --blue-dark: #1240a8;
+      --blue-light: #dbeafe;
+      --blue-mid: #bfdbfe;
+      --text: #0d1b3e;
+      --muted: #3d5a99;
+      --shadow: 0 6px 32px rgba(26, 86, 219, 0.13);
+      --shadow-hover: 0 14px 44px rgba(26, 86, 219, 0.30);
     }
 
     body {
       background: var(--bg);
+      background-image:
+        radial-gradient(ellipse 90% 55% at 50% -5%, #c5d8fc 0%, transparent 65%),
+        radial-gradient(ellipse 50% 30% at 90% 100%, #dbeafe 0%, transparent 60%);
       color: var(--text);
       font-family: 'DM Sans', sans-serif;
       min-height: 100vh;
@@ -27,65 +33,76 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 2rem 1rem;
-      overflow-x: hidden;
-    }
-
-    /* Subtle grain overlay */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
+      padding: 2.5rem 1.25rem;
     }
 
     .wrapper {
-      position: relative;
-      z-index: 1;
       width: 100%;
-      max-width: 480px;
+      max-width: 580px;
     }
 
     .header {
       text-align: center;
-      margin-bottom: 3rem;
-      animation: fadeUp 0.6s ease both;
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.55s ease both;
     }
 
-    .label {
-      font-size: 0.7rem;
-      letter-spacing: 0.25em;
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: #ffffff;
+      border: 1.5px solid var(--blue-mid);
+      border-radius: 999px;
+      padding: 0.45rem 1.1rem;
+      margin-bottom: 1.4rem;
+      box-shadow: 0 2px 10px rgba(26,86,219,0.10);
+    }
+
+    .logo-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    .logo-text {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.13em;
       text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.75rem;
-      text-shadow: 0 0 18px rgba(215, 38, 56, 0.5);
+      color: var(--blue);
     }
 
     h1 {
       font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(3rem, 10vw, 5rem);
-      line-height: 0.95;
-      letter-spacing: 0.02em;
+      line-height: 1;
+      letter-spacing: 0.03em;
       color: var(--text);
     }
 
-    h1 span {
-      color: var(--accent);
-    }
+    h1 span { color: var(--blue); }
 
     .subtitle {
-      margin-top: 1rem;
-      font-size: 0.875rem;
+      margin-top: 0.8rem;
+      font-size: 1.05rem;
       color: var(--muted);
-      font-weight: 300;
+      font-weight: 400;
+    }
+
+    .card-wrap {
+      background: var(--surface);
+      border-radius: 22px;
+      border: 1.5px solid var(--blue-mid);
+      box-shadow: var(--shadow);
+      padding: 2rem 1.75rem;
     }
 
     .grid {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 1rem;
     }
 
     .btn {
@@ -93,133 +110,199 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      padding: 1.25rem 1.5rem;
-      background: var(--card);
-      border: 1px solid var(--border);
+      padding: 1.6rem 1.75rem;
+      background: var(--blue-light);
+      border: 2px solid var(--blue-mid);
+      border-radius: 14px;
       color: var(--text);
       font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      cursor: pointer;
       text-decoration: none;
-      transition: background 0.2s, border-color 0.2s, transform 0.15s;
-      position: relative;
-      overflow: hidden;
-      animation: fadeUp 0.6s ease both;
+      cursor: pointer;
+      transition: background 0.22s, border-color 0.22s, box-shadow 0.22s, transform 0.17s;
+      animation: fadeUp 0.55s ease both;
     }
 
-    .btn:nth-child(1) { animation-delay: 0.1s; }
-    .btn:nth-child(2) { animation-delay: 0.18s; }
-    .btn:nth-child(3) { animation-delay: 0.26s; }
-    .btn:nth-child(4) { animation-delay: 0.34s; }
-    .btn:nth-child(5) { animation-delay: 0.42s; }
-
-    .btn::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 3px;
-      background: var(--accent);
-      transform: scaleY(0);
-      transform-origin: bottom;
-      transition: transform 0.2s ease;
-    }
+    .btn:nth-child(1) { animation-delay: 0.08s; }
+    .btn:nth-child(2) { animation-delay: 0.16s; }
+    .btn:nth-child(3) { animation-delay: 0.24s; }
+    .btn:nth-child(4) { animation-delay: 0.32s; }
+    .btn:nth-child(5) { animation-delay: 0.40s; }
 
     .btn:hover {
-      background: #130d0d;
-      border-color: #3a1a1a;
-      transform: translateX(4px);
-    }
-
-    .btn:hover::before {
-      transform: scaleY(1);
+      background: var(--blue);
+      border-color: var(--blue-dark);
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-3px);
     }
 
     .btn:active {
-      transform: translateX(4px) scale(0.99);
+      transform: translateY(-1px) scale(0.99);
     }
 
-    .btn-icon {
-      font-size: 1.1rem;
-      opacity: 0.4;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-
-    .btn:hover .btn-icon {
-      opacity: 1;
-      transform: translateX(4px);
-    }
-
-    .btn-role {
+    .role-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: #ffffff;
+      border: 1.5px solid var(--blue-mid);
       display: flex;
       align-items: center;
-      gap: 1rem;
-    }
-
-    .role-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--accent);
-      opacity: 0.5;
+      justify-content: center;
+      font-size: 1.6rem;
       flex-shrink: 0;
-      transition: opacity 0.2s;
+      transition: background 0.22s, border-color 0.22s;
     }
 
-    .btn:hover .role-dot {
-      opacity: 1;
+    .btn:hover .role-icon {
+      background: var(--blue-dark);
+      border-color: var(--blue-dark);
+    }
+
+    .btn-left {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+    }
+
+    .role-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .role-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      transition: color 0.22s;
+    }
+
+    .btn:hover .role-name { color: #ffffff; }
+
+    .role-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--blue);
+      transition: color 0.22s;
+    }
+
+    .btn:hover .role-tag { color: rgba(255,255,255,0.75); }
+
+    .btn-arrow {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: #ffffff;
+      border: 1.5px solid var(--blue-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      color: var(--blue);
+      flex-shrink: 0;
+      transition: background 0.22s, color 0.22s, border-color 0.22s, transform 0.22s;
+    }
+
+    .btn:hover .btn-arrow {
+      background: var(--blue-dark);
+      border-color: var(--blue-dark);
+      color: #ffffff;
+      transform: translateX(4px);
     }
 
     .footer {
       text-align: center;
-      margin-top: 2.5rem;
-      font-size: 0.7rem;
-      color: #333;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      animation: fadeUp 0.6s 0.5s ease both;
+      margin-top: 1.8rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      animation: fadeUp 0.55s 0.48s ease both;
+      opacity: 0;
+      animation-fill-mode: both;
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
+      from { opacity: 0; transform: translateY(18px); }
       to   { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
   <div class="wrapper">
+
     <div class="header">
-      <p class="label">One Health Network</p>
+      <div class="logo-badge">
+        <span class="logo-dot"></span>
+        <span class="logo-text">One Health Network</span>
+      </div>
       <h1>Select Your<br/><span>Role</span></h1>
-      <p class="subtitle">Choose your position to continue</p>
+      <p class="subtitle">Choose your position to continue to your portal.</p>
     </div>
 
-    <div class="grid">
-      <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c780f4b6a3f7521675e61b?pvs=105" target="_blank">
-        <div class="btn-role"><span class="role-dot"></span> Sales</div>
-        <span class="btn-icon">→</span>
-      </a>
-      <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c780338221c2c6211eefdb?pvs=105" target="_blank">
-        <div class="btn-role"><span class="role-dot"></span> Supervisor / Director</div>
-        <span class="btn-icon">→</span>
-      </a>
-      <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c7802d9cbbe520cb0d4dff?pvs=105" target="_blank">
-        <div class="btn-role"><span class="role-dot"></span> Accounting</div>
-        <span class="btn-icon">→</span>
-      </a>
-      <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c78092abcafe2c1a3853b2?pvs=105" target="_blank">
-        <div class="btn-role"><span class="role-dot"></span> Mobile Head / Operations</div>
-        <span class="btn-icon">→</span>
-      </a>
-      <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c7803c9f3fda73ceae85d1?pvs=105" target="_blank">
-        <div class="btn-role"><span class="role-dot"></span> Doctor</div>
-        <span class="btn-icon">→</span>
-      </a>
+    <div class="card-wrap">
+      <div class="grid">
+
+        <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c780f4b6a3f7521675e61b?pvs=105" target="_blank">
+          <div class="btn-left">
+            <div class="role-icon">💼</div>
+            <div class="role-info">
+              <span class="role-name">Sales</span>
+              <span class="role-tag">Sales Team</span>
+            </div>
+          </div>
+          <div class="btn-arrow">→</div>
+        </a>
+
+        <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c780338221c2c6211eefdb?pvs=105" target="_blank">
+          <div class="btn-left">
+            <div class="role-icon">🏅</div>
+            <div class="role-info">
+              <span class="role-name">Supervisor / Director</span>
+              <span class="role-tag">Leadership</span>
+            </div>
+          </div>
+          <div class="btn-arrow">→</div>
+        </a>
+
+        <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c7802d9cbbe520cb0d4dff?pvs=105" target="_blank">
+          <div class="btn-left">
+            <div class="role-icon">🧾</div>
+            <div class="role-info">
+              <span class="role-name">Accounting</span>
+              <span class="role-tag">Finance & Accounting</span>
+            </div>
+          </div>
+          <div class="btn-arrow">→</div>
+        </a>
+
+        <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c78092abcafe2c1a3853b2?pvs=105" target="_blank">
+          <div class="btn-left">
+            <div class="role-icon">📱</div>
+            <div class="role-info">
+              <span class="role-name">Mobile Head / Operations</span>
+              <span class="role-tag">Operations</span>
+            </div>
+          </div>
+          <div class="btn-arrow">→</div>
+        </a>
+
+        <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c7803c9f3fda73ceae85d1?pvs=105" target="_blank">
+          <div class="btn-left">
+            <div class="role-icon">🩺</div>
+            <div class="role-info">
+              <span class="role-name">Doctor</span>
+              <span class="role-tag">Medical Team</span>
+            </div>
+          </div>
+          <div class="btn-arrow">→</div>
+        </a>
+
+      </div>
     </div>
 
-    <p class="footer">© One Health Network — Internal Portal</p>
+    <p class="footer">© 2026 One Health Network &nbsp;·&nbsp; Internal Portal</p>
   </div>
 </body>
 </html>

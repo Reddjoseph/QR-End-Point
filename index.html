@@ -17,15 +17,15 @@
       --blue-mid: #bfdbfe;
       --text: #0d1b3e;
       --muted: #3d5a99;
-      --shadow: 0 6px 32px rgba(26, 86, 219, 0.13);
-      --shadow-hover: 0 14px 44px rgba(26, 86, 219, 0.30);
+      --shadow: 0 4px 20px rgba(26, 86, 219, 0.10);
+      --shadow-hover: 0 16px 48px rgba(26, 86, 219, 0.28);
     }
 
     body {
       background: var(--bg);
       background-image:
-        radial-gradient(ellipse 90% 55% at 50% -5%, #c5d8fc 0%, transparent 65%),
-        radial-gradient(ellipse 50% 30% at 90% 100%, #dbeafe 0%, transparent 60%);
+        radial-gradient(ellipse 100% 50% at 50% -10%, #c5d8fc 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 100% 110%, #dbeafe 0%, transparent 55%);
       color: var(--text);
       font-family: 'DM Sans', sans-serif;
       min-height: 100vh;
@@ -33,18 +33,19 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 2.5rem 1.25rem;
+      padding: 3rem 1.5rem;
     }
 
     .wrapper {
       width: 100%;
-      max-width: 580px;
+      max-width: 760px;
     }
 
+    /* ── HEADER ── */
     .header {
       text-align: center;
-      margin-bottom: 2.5rem;
-      animation: fadeUp 0.55s ease both;
+      margin-bottom: 2.75rem;
+      animation: fadeUp 0.5s ease both;
     }
 
     .logo-badge {
@@ -54,9 +55,9 @@
       background: #ffffff;
       border: 1.5px solid var(--blue-mid);
       border-radius: 999px;
-      padding: 0.45rem 1.1rem;
+      padding: 0.45rem 1.15rem;
       margin-bottom: 1.4rem;
-      box-shadow: 0 2px 10px rgba(26,86,219,0.10);
+      box-shadow: 0 2px 12px rgba(26,86,219,0.10);
     }
 
     .logo-dot {
@@ -69,14 +70,14 @@
     .logo-text {
       font-size: 0.78rem;
       font-weight: 700;
-      letter-spacing: 0.13em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--blue);
     }
 
     h1 {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(3rem, 10vw, 5rem);
+      font-size: clamp(3rem, 9vw, 5rem);
       line-height: 1;
       letter-spacing: 0.03em;
       color: var(--text);
@@ -85,103 +86,104 @@
     h1 span { color: var(--blue); }
 
     .subtitle {
-      margin-top: 0.8rem;
-      font-size: 1.05rem;
+      margin-top: 0.75rem;
+      font-size: 1rem;
       color: var(--muted);
       font-weight: 400;
     }
 
-    .card-wrap {
-      background: var(--surface);
-      border-radius: 22px;
-      border: 1.5px solid var(--blue-mid);
-      box-shadow: var(--shadow);
-      padding: 2rem 1.75rem;
-    }
-
+    /* ── CARD GRID ── */
     .grid {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .btn {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      padding: 1.6rem 1.75rem;
-      background: var(--blue-light);
-      border: 2px solid var(--blue-mid);
-      border-radius: 14px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      text-decoration: none;
-      cursor: pointer;
-      transition: background 0.22s, border-color 0.22s, box-shadow 0.22s, transform 0.17s;
-      animation: fadeUp 0.55s ease both;
-    }
-
-    .btn:nth-child(1) { animation-delay: 0.08s; }
-    .btn:nth-child(2) { animation-delay: 0.16s; }
-    .btn:nth-child(3) { animation-delay: 0.24s; }
-    .btn:nth-child(4) { animation-delay: 0.32s; }
-    .btn:nth-child(5) { animation-delay: 0.40s; }
-    .btn:nth-child(6) { animation-delay: 0.48s; }
-
-    .btn:hover {
-      background: var(--blue);
-      border-color: var(--blue-dark);
-      box-shadow: var(--shadow-hover);
-      transform: translateY(-3px);
-    }
-
-    .btn:active {
-      transform: translateY(-1px) scale(0.99);
-    }
-
-    .role-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 12px;
-      background: #ffffff;
-      border: 1.5px solid var(--blue-mid);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      flex-shrink: 0;
-      transition: background 0.22s, border-color 0.22s;
-    }
-
-    .btn:hover .role-icon {
-      background: var(--blue-dark);
-      border-color: var(--blue-dark);
-    }
-
-    .btn-left {
-      display: flex;
-      align-items: center;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 1.1rem;
     }
 
-    .role-info {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
+    @media (max-width: 600px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
     }
 
-    .role-name {
-      font-size: 1.15rem;
+    @media (max-width: 380px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 2.25rem 1.25rem 1.75rem;
+      background: var(--surface);
+      border: 2px solid var(--blue-mid);
+      border-radius: 20px;
+      text-decoration: none;
+      color: var(--text);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: background 0.22s, border-color 0.22s, box-shadow 0.22s, transform 0.18s;
+      animation: fadeUp 0.55s ease both;
+      text-align: center;
+    }
+
+    .card:nth-child(1) { animation-delay: 0.06s; }
+    .card:nth-child(2) { animation-delay: 0.12s; }
+    .card:nth-child(3) { animation-delay: 0.18s; }
+    .card:nth-child(4) { animation-delay: 0.24s; }
+    .card:nth-child(5) { animation-delay: 0.30s; }
+    .card:nth-child(6) { animation-delay: 0.36s; }
+
+    .card:hover {
+      background: var(--blue);
+      border-color: var(--blue-dark);
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-6px);
+    }
+
+    .card:active {
+      transform: translateY(-2px) scale(0.98);
+    }
+
+    /* Icon circle */
+    .card-icon {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background: var(--blue-light);
+      border: 2px solid var(--blue-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      flex-shrink: 0;
+      transition: background 0.22s, border-color 0.22s, transform 0.22s;
+    }
+
+    .card:hover .card-icon {
+      background: var(--blue-dark);
+      border-color: rgba(255,255,255,0.2);
+      transform: scale(1.08);
+    }
+
+    .card-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .card-name {
+      font-size: 1rem;
       font-weight: 700;
       color: var(--text);
+      line-height: 1.25;
       transition: color 0.22s;
     }
 
-    .btn:hover .role-name { color: #ffffff; }
+    .card:hover .card-name { color: #ffffff; }
 
-    .role-tag {
-      font-size: 0.72rem;
+    .card-tag {
+      font-size: 0.68rem;
       font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -189,43 +191,45 @@
       transition: color 0.22s;
     }
 
-    .btn:hover .role-tag { color: rgba(255,255,255,0.75); }
+    .card:hover .card-tag { color: rgba(255,255,255,0.72); }
 
-    .btn-arrow {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: #ffffff;
+    /* Arrow chip */
+    .card-arrow {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--blue-light);
       border: 1.5px solid var(--blue-mid);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.15rem;
+      font-size: 0.95rem;
       color: var(--blue);
-      flex-shrink: 0;
+      margin-top: 0.15rem;
       transition: background 0.22s, color 0.22s, border-color 0.22s, transform 0.22s;
     }
 
-    .btn:hover .btn-arrow {
-      background: var(--blue-dark);
-      border-color: var(--blue-dark);
+    .card:hover .card-arrow {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.32);
       color: #ffffff;
-      transform: translateX(4px);
+      transform: translateY(2px);
     }
 
+    /* ── FOOTER ── */
     .footer {
       text-align: center;
-      margin-top: 1.8rem;
+      margin-top: 2rem;
       font-size: 0.78rem;
       color: var(--muted);
       letter-spacing: 0.05em;
-      animation: fadeUp 0.55s 0.48s ease both;
+      animation: fadeUp 0.55s 0.42s ease both;
       opacity: 0;
       animation-fill-mode: both;
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
+      from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0); }
     }
   </style>
@@ -238,80 +242,66 @@
         <span class="logo-dot"></span>
         <span class="logo-text">One Health Network</span>
       </div>
-      <h1>Select Your<br/><span>Role</span></h1>
+      <h1>Select Your <span>Role</span></h1>
       <p class="subtitle">Choose your position to continue to your portal.</p>
     </div>
 
-    <div class="card-wrap">
-      <div class="grid">
+    <div class="grid">
 
-        <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c780f4b6a3f7521675e61b?pvs=105" target="_blank">
-          <div class="btn-left">
-            <div class="role-icon">📋</div>
-            <div class="role-info">
-              <span class="role-name">Sales</span>
-              <span class="role-tag">Sales Team</span>
-            </div>
-          </div>
-          <div class="btn-arrow">→</div>
-        </a>
+      <a class="card" href="https://mercury-drink-0aa.notion.site/3100105215c780f4b6a3f7521675e61b?pvs=105" target="_blank">
+        <div class="card-icon">📋</div>
+        <div class="card-info">
+          <span class="card-name">Sales</span>
+          <span class="card-tag">Sales Team</span>
+        </div>
+        <div class="card-arrow">↓</div>
+      </a>
 
-        <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c780338221c2c6211eefdb?pvs=105" target="_blank">
-          <div class="btn-left">
-            <div class="role-icon">🧑‍💼</div>
-            <div class="role-info">
-              <span class="role-name">Supervisor / Director</span>
-              <span class="role-tag">Managers</span>
-            </div>
-          </div>
-          <div class="btn-arrow">→</div>
-        </a>
+      <a class="card" href="https://mercury-drink-0aa.notion.site/3100105215c780338221c2c6211eefdb?pvs=105" target="_blank">
+        <div class="card-icon">🧑‍💼</div>
+        <div class="card-info">
+          <span class="card-name">Supervisor / Director</span>
+          <span class="card-tag">Managers</span>
+        </div>
+        <div class="card-arrow">↓</div>
+      </a>
 
-        <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c7802d9cbbe520cb0d4dff?pvs=105" target="_blank">
-          <div class="btn-left">
-            <div class="role-icon">🧾</div>
-            <div class="role-info">
-              <span class="role-name">Accounting</span>
-              <span class="role-tag">Finance & Accounting</span>
-            </div>
-          </div>
-          <div class="btn-arrow">→</div>
-        </a>
+      <a class="card" href="https://mercury-drink-0aa.notion.site/3100105215c7802d9cbbe520cb0d4dff?pvs=105" target="_blank">
+        <div class="card-icon">🧾</div>
+        <div class="card-info">
+          <span class="card-name">Accounting</span>
+          <span class="card-tag">Finance & Accounting</span>
+        </div>
+        <div class="card-arrow">↓</div>
+      </a>
 
-        <a class="btn" href="https://mercury-drink-0aa.notion.site/3120105215c7805281cbf7b9b42c6e29?pvs=105" target="_blank">
-          <div class="btn-left">
-            <div class="role-icon">👨🏻‍💻</div>
-            <div class="role-info">
-              <span class="role-name">Mobile Head</span>
-              <span class="role-tag">Head Operations</span>
-            </div>
-          </div>
-          <div class="btn-arrow">→</div>
-        </a>
+      <a class="card" href="https://mercury-drink-0aa.notion.site/3120105215c7805281cbf7b9b42c6e29?pvs=105" target="_blank">
+        <div class="card-icon">👨🏻‍💻</div>
+        <div class="card-info">
+          <span class="card-name">Mobile Head</span>
+          <span class="card-tag">Head Operations</span>
+        </div>
+        <div class="card-arrow">↓</div>
+      </a>
 
-        <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c78092abcafe2c1a3853b2?pvs=105" target="_blank">
-          <div class="btn-left">
-            <div class="role-icon">⚙️</div>
-            <div class="role-info">
-              <span class="role-name">Operations</span>
-              <span class="role-tag">Operations Team</span>
-            </div>
-          </div>
-          <div class="btn-arrow">→</div>
-        </a>
+      <a class="card" href="https://mercury-drink-0aa.notion.site/3100105215c78092abcafe2c1a3853b2?pvs=105" target="_blank">
+        <div class="card-icon">⚙️</div>
+        <div class="card-info">
+          <span class="card-name">Operations</span>
+          <span class="card-tag">Operations Team</span>
+        </div>
+        <div class="card-arrow">↓</div>
+      </a>
 
-        <a class="btn" href="https://mercury-drink-0aa.notion.site/3100105215c7803c9f3fda73ceae85d1?pvs=105" target="_blank">
-          <div class="btn-left">
-            <div class="role-icon">🩺</div>
-            <div class="role-info">
-              <span class="role-name">Doctor</span>
-              <span class="role-tag">Assessing Physician</span>
-            </div>
-          </div>
-          <div class="btn-arrow">→</div>
-        </a>
+      <a class="card" href="https://mercury-drink-0aa.notion.site/3100105215c7803c9f3fda73ceae85d1?pvs=105" target="_blank">
+        <div class="card-icon">🩺</div>
+        <div class="card-info">
+          <span class="card-name">Doctor</span>
+          <span class="card-tag">Assessing Physician</span>
+        </div>
+        <div class="card-arrow">↓</div>
+      </a>
 
-      </div>
     </div>
 
     <p class="footer">© 2026 One Health Network &nbsp;·&nbsp; Internal Portal</p>

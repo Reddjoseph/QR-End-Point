@@ -29,10 +29,15 @@
       color: var(--text);
       font-family: 'DM Sans', sans-serif;
       min-height: 100vh;
+    }
+
+    /* ─── HOME VIEW ─────────────────────────────── */
+    #view-home {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      min-height: 100vh;
       padding: 3rem 1.5rem;
     }
 
@@ -41,7 +46,6 @@
       max-width: 760px;
     }
 
-    /* ── HEADER ── */
     .header {
       text-align: center;
       margin-bottom: 2.75rem;
@@ -124,6 +128,7 @@
       transition: background 0.22s, border-color 0.22s, box-shadow 0.22s, transform 0.18s;
       animation: fadeUp 0.55s ease both;
       text-align: center;
+      position: relative;
     }
 
     .card:nth-child(1) { animation-delay: 0.06s; }
@@ -133,15 +138,41 @@
     .card:nth-child(5) { animation-delay: 0.30s; }
     .card:nth-child(6) { animation-delay: 0.36s; }
 
-    .card:hover {
+    .card:not(.card--disabled):hover {
       background: var(--blue);
       border-color: var(--blue-dark);
       box-shadow: var(--shadow-hover);
       transform: translateY(-6px);
     }
 
-    .card:active {
+    .card:not(.card--disabled):active {
       transform: translateY(-2px) scale(0.98);
+    }
+
+    /* Disabled card */
+    .card--disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      filter: grayscale(0.3);
+    }
+
+    .card--disabled .card-arrow {
+      display: none;
+    }
+
+    .card--disabled::after {
+      content: 'Coming Soon';
+      position: absolute;
+      top: 0.6rem;
+      right: 0.7rem;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: #e2e8f0;
+      color: #64748b;
+      border-radius: 999px;
+      padding: 0.2rem 0.55rem;
     }
 
     /* Icon circle */
@@ -159,7 +190,7 @@
       transition: background 0.22s, border-color 0.22s, transform 0.22s;
     }
 
-    .card:hover .card-icon {
+    .card:not(.card--disabled):hover .card-icon {
       background: var(--blue-dark);
       border-color: rgba(255,255,255,0.2);
       transform: scale(1.08);
@@ -180,7 +211,7 @@
       transition: color 0.22s;
     }
 
-    .card:hover .card-name { color: #ffffff; }
+    .card:not(.card--disabled):hover .card-name { color: #ffffff; }
 
     .card-tag {
       font-size: 0.68rem;
@@ -191,9 +222,8 @@
       transition: color 0.22s;
     }
 
-    .card:hover .card-tag { color: rgba(255,255,255,0.72); }
+    .card:not(.card--disabled):hover .card-tag { color: rgba(255,255,255,0.72); }
 
-    /* Arrow chip */
     .card-arrow {
       width: 32px;
       height: 32px;
@@ -209,7 +239,7 @@
       transition: background 0.22s, color 0.22s, border-color 0.22s, transform 0.22s;
     }
 
-    .card:hover .card-arrow {
+    .card:not(.card--disabled):hover .card-arrow {
       background: rgba(255,255,255,0.18);
       border-color: rgba(255,255,255,0.32);
       color: #ffffff;
@@ -228,6 +258,502 @@
       animation-fill-mode: both;
     }
 
+    /* ─── FORM VIEW ─────────────────────────────── */
+    #view-form {
+      display: none;
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    .form-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1.5px solid var(--blue-mid);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 2px 16px rgba(26,86,219,0.07);
+    }
+
+    .form-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--blue-light);
+      border: 1.5px solid var(--blue-mid);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--blue);
+      cursor: pointer;
+      transition: background 0.18s, border-color 0.18s, color 0.18s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .form-back-btn:hover {
+      background: var(--blue);
+      border-color: var(--blue-dark);
+      color: #fff;
+    }
+
+    .form-header-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .form-header-role {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+
+    .form-header-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.35rem;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .form-body {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    /* Top banner card */
+    .form-banner {
+      background: var(--blue);
+      border-radius: 18px;
+      padding: 2rem 2rem 1.75rem;
+      color: #fff;
+    }
+
+    .form-banner-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-banner-sub {
+      font-size: 0.88rem;
+      opacity: 0.82;
+      line-height: 1.5;
+    }
+
+    /* Question card */
+    .q-card {
+      background: var(--surface);
+      border: 1.5px solid var(--blue-mid);
+      border-radius: 16px;
+      padding: 1.5rem 1.75rem;
+      box-shadow: var(--shadow);
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .q-card.required-error {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.12);
+    }
+
+    .q-number {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 0.35rem;
+    }
+
+    .q-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+      line-height: 1.4;
+    }
+
+    .q-required-star {
+      color: #ef4444;
+      margin-left: 2px;
+    }
+
+    .q-optional-tag {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      margin-left: 0.4rem;
+    }
+
+    /* Steps block */
+    .q-steps-block {
+      margin: 0.85rem 0 0.5rem;
+      border: 1px solid var(--blue-mid);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .q-steps-header {
+      background: var(--blue-light);
+      padding: 0.45rem 0.85rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+
+    .q-steps-body {
+      padding: 0.75rem 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .q-step {
+      display: flex;
+      gap: 0.6rem;
+      font-size: 0.83rem;
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    .q-step-num {
+      min-width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .q-step-bullet {
+      min-width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+      flex-shrink: 0;
+      margin-top: 7px;
+    }
+
+    .q-expected {
+      margin: 0.75rem 0 0;
+      padding: 0.65rem 0.85rem;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      color: #166534;
+      line-height: 1.5;
+    }
+
+    .q-expected-label {
+      font-weight: 700;
+      display: block;
+      margin-bottom: 0.2rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* Radio group */
+    .q-radio-group {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .q-radio-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.7rem 1rem;
+      border: 1.5px solid var(--blue-mid);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text);
+      user-select: none;
+    }
+
+    .q-radio-label:hover {
+      background: var(--blue-light);
+      border-color: var(--blue);
+    }
+
+    .q-radio-label input[type="radio"] {
+      display: none;
+    }
+
+    .q-radio-circle {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--blue-mid);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .q-radio-circle::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #fff;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .q-radio-label input[type="radio"]:checked ~ .q-radio-circle {
+      border-color: var(--blue);
+      background: var(--blue);
+    }
+
+    .q-radio-label input[type="radio"]:checked ~ .q-radio-circle::after {
+      opacity: 1;
+    }
+
+    .q-radio-label:has(input[type="radio"]:checked) {
+      background: var(--blue-light);
+      border-color: var(--blue);
+    }
+
+    /* Pass / Fail / N/A color accents */
+    .q-radio-label[data-val="Pass"]:has(input:checked) {
+      background: #f0fdf4;
+      border-color: #22c55e;
+    }
+    .q-radio-label[data-val="Pass"]:has(input:checked) .q-radio-circle {
+      border-color: #22c55e;
+      background: #22c55e;
+    }
+
+    .q-radio-label[data-val="Fail"]:has(input:checked) {
+      background: #fef2f2;
+      border-color: #ef4444;
+    }
+    .q-radio-label[data-val="Fail"]:has(input:checked) .q-radio-circle {
+      border-color: #ef4444;
+      background: #ef4444;
+    }
+
+    .q-radio-label[data-val="N/A"]:has(input:checked) {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+    .q-radio-label[data-val="N/A"]:has(input:checked) .q-radio-circle {
+      border-color: #94a3b8;
+      background: #94a3b8;
+    }
+
+    .q-radio-emoji { font-size: 1rem; }
+
+    /* Text input / textarea */
+    .q-input,
+    .q-textarea {
+      margin-top: 0.85rem;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1.5px solid var(--blue-mid);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text);
+      background: #f8faff;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .q-input:focus,
+    .q-textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26,86,219,0.12);
+      background: #fff;
+    }
+
+    .q-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .q-hint {
+      margin-top: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* File upload */
+    .q-file-area {
+      margin-top: 0.85rem;
+      border: 2px dashed var(--blue-mid);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      position: relative;
+    }
+
+    .q-file-area:hover {
+      border-color: var(--blue);
+      background: var(--blue-light);
+    }
+
+    .q-file-area input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .q-file-icon { font-size: 2rem; margin-bottom: 0.4rem; }
+    .q-file-text { font-size: 0.85rem; color: var(--muted); }
+    .q-file-text strong { color: var(--blue); }
+    .q-file-name {
+      margin-top: 0.65rem;
+      font-size: 0.8rem;
+      color: var(--blue);
+      font-weight: 600;
+      display: none;
+    }
+
+    /* Submit area */
+    .form-submit-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.85rem;
+      padding-top: 0.5rem;
+    }
+
+    .form-submit-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 0.9rem 2.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s, transform 0.15s, box-shadow 0.18s;
+      box-shadow: 0 4px 16px rgba(26,86,219,0.3);
+    }
+
+    .form-submit-btn:hover {
+      background: var(--blue-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(26,86,219,0.38);
+    }
+
+    .form-submit-btn:active { transform: translateY(0); }
+
+    .form-error-msg {
+      font-size: 0.82rem;
+      color: #ef4444;
+      font-weight: 600;
+      display: none;
+    }
+
+    /* ─── SUCCESS VIEW ─────────────────────────────── */
+    #view-success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 3rem 1.5rem;
+      text-align: center;
+    }
+
+    .success-card {
+      background: #fff;
+      border: 2px solid var(--blue-mid);
+      border-radius: 24px;
+      padding: 3rem 2.5rem;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: var(--shadow-hover);
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .success-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .success-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      margin-bottom: 0.65rem;
+    }
+
+    .success-title span { color: var(--blue); }
+
+    .success-sub {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .success-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 0.75rem 1.75rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s, transform 0.15s;
+      box-shadow: 0 4px 16px rgba(26,86,219,0.28);
+    }
+
+    .success-back-btn:hover {
+      background: var(--blue-dark);
+      transform: translateY(-2px);
+    }
+
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -235,76 +761,905 @@
   </style>
 </head>
 <body>
-  <div class="wrapper">
 
-    <div class="header">
-      <div class="logo-badge">
-        <span class="logo-dot"></span>
-        <span class="logo-text">One Health Network</span>
+  <!-- ══════════════════════════════════════════════
+       VIEW: ROLE SELECTION
+  ══════════════════════════════════════════════ -->
+  <div id="view-home">
+    <div class="wrapper">
+
+      <div class="header">
+        <div class="logo-badge">
+          <span class="logo-dot"></span>
+          <span class="logo-text">One Health Network</span>
+        </div>
+        <h1>Select Your <span>Role</span></h1>
+        <p class="subtitle">Choose your position to continue to your portal.</p>
       </div>
-      <h1>Select Your <span>Role</span></h1>
-      <p class="subtitle">Choose your position to continue to your portal.</p>
+
+      <div class="grid">
+
+        <div class="card" onclick="openForm('sales')">
+          <div class="card-icon">📋</div>
+          <div class="card-info">
+            <span class="card-name">Sales</span>
+            <span class="card-tag">Sales Team</span>
+          </div>
+          <div class="card-arrow">↓</div>
+        </div>
+
+        <div class="card" onclick="openForm('manager')">
+          <div class="card-icon">🧑‍💼</div>
+          <div class="card-info">
+            <span class="card-name">Supervisor / Director</span>
+            <span class="card-tag">Managers</span>
+          </div>
+          <div class="card-arrow">↓</div>
+        </div>
+
+        <div class="card card--disabled">
+          <div class="card-icon">🧾</div>
+          <div class="card-info">
+            <span class="card-name">Accounting</span>
+            <span class="card-tag">Finance & Accounting</span>
+          </div>
+        </div>
+
+        <div class="card card--disabled">
+          <div class="card-icon">👨🏻‍💻</div>
+          <div class="card-info">
+            <span class="card-name">Mobile Head</span>
+            <span class="card-tag">Head Operations</span>
+          </div>
+        </div>
+
+        <div class="card card--disabled">
+          <div class="card-icon">⚙️</div>
+          <div class="card-info">
+            <span class="card-name">Operations</span>
+            <span class="card-tag">Operations Team</span>
+          </div>
+        </div>
+
+        <div class="card card--disabled">
+          <div class="card-icon">🩺</div>
+          <div class="card-info">
+            <span class="card-name">Doctor</span>
+            <span class="card-tag">Assessing Physician</span>
+          </div>
+        </div>
+
+      </div>
+
+      <p class="footer">© 2026 One Health Network &nbsp;·&nbsp; Internal Portal</p>
     </div>
-
-    <div class="grid">
-
-      <a class="card" href="https://mercury-drink-0aa.notion.site/3100105215c780f4b6a3f7521675e61b?pvs=105" target="_blank">
-        <div class="card-icon">📋</div>
-        <div class="card-info">
-          <span class="card-name">Sales</span>
-          <span class="card-tag">Sales Team</span>
-        </div>
-        <div class="card-arrow">↓</div>
-      </a>
-
-      <a class="card" href="https://mercury-drink-0aa.notion.site/3100105215c780338221c2c6211eefdb?pvs=105" target="_blank">
-        <div class="card-icon">🧑‍💼</div>
-        <div class="card-info">
-          <span class="card-name">Supervisor / Director</span>
-          <span class="card-tag">Managers</span>
-        </div>
-        <div class="card-arrow">↓</div>
-      </a>
-
-      <a class="card" href="https://mercury-drink-0aa.notion.site/3100105215c7802d9cbbe520cb0d4dff?pvs=105" target="_blank">
-        <div class="card-icon">🧾</div>
-        <div class="card-info">
-          <span class="card-name">Accounting</span>
-          <span class="card-tag">Finance & Accounting</span>
-        </div>
-        <div class="card-arrow">↓</div>
-      </a>
-
-      <a class="card" href="https://mercury-drink-0aa.notion.site/3120105215c7805281cbf7b9b42c6e29?pvs=105" target="_blank">
-        <div class="card-icon">👨🏻‍💻</div>
-        <div class="card-info">
-          <span class="card-name">Mobile Head</span>
-          <span class="card-tag">Head Operations</span>
-        </div>
-        <div class="card-arrow">↓</div>
-      </a>
-
-      <a class="card" href="https://mercury-drink-0aa.notion.site/3100105215c78092abcafe2c1a3853b2?pvs=105" target="_blank">
-        <div class="card-icon">⚙️</div>
-        <div class="card-info">
-          <span class="card-name">Operations</span>
-          <span class="card-tag">Operations Team</span>
-        </div>
-        <div class="card-arrow">↓</div>
-      </a>
-
-      <a class="card" href="https://mercury-drink-0aa.notion.site/3100105215c7803c9f3fda73ceae85d1?pvs=105" target="_blank">
-        <div class="card-icon">🩺</div>
-        <div class="card-info">
-          <span class="card-name">Doctor</span>
-          <span class="card-tag">Assessing Physician</span>
-        </div>
-        <div class="card-arrow">↓</div>
-      </a>
-
-    </div>
-
-    <p class="footer">© 2026 One Health Network &nbsp;·&nbsp; Internal Portal</p>
   </div>
+
+
+  <!-- ══════════════════════════════════════════════
+       VIEW: FORM
+  ══════════════════════════════════════════════ -->
+  <div id="view-form">
+    <div class="form-header">
+      <button class="form-back-btn" onclick="goHome()">← Back</button>
+      <div class="form-header-info">
+        <span class="form-header-role" id="form-role-label"></span>
+        <span class="form-header-title">UAT Survey Form</span>
+      </div>
+    </div>
+    <div class="form-body" id="form-body">
+      <!-- Dynamically rendered -->
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════
+       VIEW: SUCCESS
+  ══════════════════════════════════════════════ -->
+  <div id="view-success">
+    <div class="success-card">
+      <div class="success-icon">✅</div>
+      <div class="success-title">Response <span>Submitted!</span></div>
+      <p class="success-sub">
+        Thank you for completing the UAT survey.<br>
+        Your feedback has been recorded successfully.
+      </p>
+      <button class="success-back-btn" onclick="goHome()">← Back to Role Selection</button>
+    </div>
+  </div>
+
+
+  <script>
+    // ─────────────────────────────────────────────────────────
+    // QUESTION DATA
+    // ─────────────────────────────────────────────────────────
+
+    const TEST_OPTIONS = ['Pass', 'Fail', 'N/A'];
+    const TEST_EMOJIS  = { Pass: '✅', Fail: '❌', 'N/A': '—' };
+
+    const FINAL_OPTIONS = [
+      'Yes, I approve this system for deployment',
+      'No, I do not approve this system for deployment'
+    ];
+
+    // ── SALES questions ──────────────────────────────────────
+    const salesQuestions = [
+      {
+        id: 1, type: 'text', required: true,
+        title: 'FULL NAME'
+      },
+      {
+        id: 2, type: 'test', required: true,
+        title: 'LOGIN & AUTHENTICATION',
+        steps: [
+          'Go to https://ape.onehealthnetwork.com.ph',
+          'Enter your username and password.',
+          'Click Log In.'
+        ],
+        expected: 'You will be redirected to the Dashboard screen after logging in successfully.'
+      },
+      {
+        id: 3, type: 'test', required: true,
+        title: 'EDIT PROFILE',
+        steps: [
+          'Click your name at the top of the sidebar to open your profile.',
+          'Update the information you want to change (such as your personal details, profile photo, e-signature, or password).',
+          'Click Save.'
+        ],
+        expected: 'Your changes will be saved successfully.'
+      },
+      {
+        id: 4, type: 'test', required: true,
+        title: 'ASN CREATION',
+        steps: [
+          'Go to the ASN tab.',
+          'Click the Create New ASN button.',
+          'Fill out the required information in the form.',
+          'Click Save and Submit.'
+        ],
+        expected: 'The ASN should be successfully created and appear in the list. If there are any errors, a message should appear explaining the issue.'
+      },
+      {
+        id: 5, type: 'test', required: true,
+        title: 'DRAFT & EDIT ASN',
+        steps: [
+          'Go to the ASN tab.',
+          'Click Create New ASN.',
+          'Fill out the form, but do not sign it yet. Then click Save and Submit.',
+          'Find the ASN in the list. It should be marked as Draft.',
+          'Click View.',
+          'Update any information as needed. You may also sign it this time.',
+          'Click Save and Submit again.'
+        ],
+        expected: 'The ASN should be saved as a Draft. The draft ASN should still be editable. After updating and submitting, it should be saved properly and can be approved.'
+      },
+      {
+        id: 6, type: 'test', required: true,
+        title: 'ASN APPROVAL & REJECTION',
+        steps: [
+          'Navigate to the ASN tab.',
+          'Find the ASN you want to check, then click View.',
+          'Scroll down to the bottom of the page.',
+          'Choose Approve or Reject.'
+        ],
+        expected: 'The ASN will be successfully approved or rejected, and the status will update accordingly.'
+      },
+      {
+        id: 7, type: 'test', required: true,
+        title: 'ADD MEDICAL SERVICE',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click Browse All Services.',
+          'Click + Add New Service.',
+          'Fill out the required details in the form.',
+          'Click Create.'
+        ],
+        expected: 'The new service should be added successfully and appear in the list of services.'
+      },
+      {
+        id: 8, type: 'test', required: true,
+        title: 'EDIT MEDICAL SERVICE',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click Browse All Services.',
+          'Find the service you want to update and click the vertical three-dot (⋮) button next to it.',
+          'Select Edit Service.',
+          'Update the information as needed.',
+          'Click Save Changes.'
+        ],
+        expected: 'The service should be updated successfully, and the changes should appear in the list.'
+      },
+      {
+        id: 9, type: 'test', required: true,
+        title: 'DEACTIVATE MEDICAL SERVICE',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click Browse All Services.',
+          'Find the service you want to deactivate and click the vertical three-dot (⋮) button next to it.',
+          'Select Deactivate.',
+          'Click Confirm.'
+        ],
+        expected: 'The service should be deactivated successfully and no longer active in the list.'
+      },
+      {
+        id: 10, type: 'test', required: true,
+        title: 'ACTIVATE MEDICAL SERVICE',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click Browse All Services.',
+          'Find the deactivated service and click the vertical three-dot (⋮) button next to it.',
+          'Select Activate.',
+          'Click Confirm.'
+        ],
+        expected: 'The service should be activated successfully and appear as active in the list.'
+      },
+      {
+        id: 11, type: 'test', required: true,
+        title: 'DELETE MEDICAL SERVICE',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click Browse All Services.',
+          'Find the service you want to delete and click the vertical three-dot (⋮) button next to it.',
+          'Select Delete.',
+          'Click Delete again to confirm.'
+        ],
+        expected: 'The service should be deleted successfully and removed from the list.'
+      },
+      {
+        id: 12, type: 'test', required: true,
+        title: 'ADD MEDICAL SERVICE PACKAGE',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click Package Library.',
+          'Click + Add Package.',
+          'Fill out the required details in the form.',
+          'Click Create.'
+        ],
+        expected: 'The package should be added successfully and appear in the Package Library.'
+      },
+      {
+        id: 13, type: 'test', required: true,
+        title: 'EDIT MEDICAL SERVICE PACKAGE',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click Package Library.',
+          'Find the package you want to update and click the vertical three-dot (⋮) button next to it.',
+          'Select Edit.',
+          'Update the information as needed.',
+          'Click Save Changes.'
+        ],
+        expected: 'The package should be updated successfully, and the changes should appear in the list.'
+      },
+      {
+        id: 14, type: 'test', required: true,
+        title: 'DEACTIVATE MEDICAL SERVICE PACKAGE',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click Package Library.',
+          'Find the package you want to deactivate and click the vertical three-dot (⋮) button next to it.',
+          'Select Deactivate.',
+          'Click Confirm.'
+        ],
+        expected: 'The package should be deactivated successfully and marked as inactive in the list.'
+      },
+      {
+        id: 15, type: 'test', required: true,
+        title: 'ACTIVATE MEDICAL SERVICE PACKAGE',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click Package Library.',
+          'Find the package you want to activate and click the vertical three-dot (⋮) button next to it.',
+          'Select Activate.',
+          'Click Confirm.'
+        ],
+        expected: 'The package should be activated successfully and appear as active in the list.'
+      },
+      {
+        id: 16, type: 'test', required: true,
+        title: 'ADD HMO',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click HMO Management.',
+          'Click + Add HMO.',
+          'Fill out the required details in the form.',
+          'Click Create HMO.'
+        ],
+        expected: 'The HMO should be added successfully and appear in the HMO Management list.'
+      },
+      {
+        id: 17, type: 'test', required: true,
+        title: 'DEACTIVATE HMO',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click HMO Management.',
+          'Find the HMO you want to deactivate in the list and click the vertical three-dot (⋮) button next to it.',
+          'Select Deactivate.',
+          'Click Confirm.'
+        ],
+        expected: 'The HMO should be deactivated successfully and marked as inactive in the list.'
+      },
+      {
+        id: 18, type: 'test', required: true,
+        title: 'ACTIVATE HMO',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click HMO Management.',
+          'Find the HMO you want to activate in the list and click the vertical three-dot (⋮) button next to it.',
+          'Select Activate.',
+          'Click Confirm.'
+        ],
+        expected: 'The HMO should be activated successfully and appear as active in the list.'
+      },
+      {
+        id: 19, type: 'test', required: true,
+        title: 'MANAGE HMO PACKAGES PRICES',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click HMO Management.',
+          'Find the HMO package you want to update and click Manage.',
+          'Update the prices or other details in the form.',
+          'Click Save Changes.'
+        ],
+        expected: 'The HMO package prices should be saved successfully and reflected in the list.'
+      },
+      {
+        id: 20, type: 'test', required: true,
+        title: 'CREATE INSTRUCTION TEMPLATES',
+        steps: [
+          'Go to the Instruction Templates tab.',
+          'Click + New Template.',
+          'Fill out the required information in the form.',
+          'Click Create.'
+        ],
+        expected: 'The instruction template should be created successfully and appear in the list.'
+      },
+      {
+        id: 21, type: 'test', required: true,
+        title: 'EDIT INSTRUCTION TEMPLATE',
+        steps: [
+          'Go to the Instruction Templates tab.',
+          'Find the template you want to update and click the vertical three-dot (⋮) button next to it.',
+          'Select Edit.',
+          'Update the information as needed.',
+          'Click Update.'
+        ],
+        expected: 'The instruction template should be updated successfully and reflect the changes in the list.'
+      },
+      {
+        id: 22, type: 'test', required: true,
+        title: 'DELETE INSTRUCTION TEMPLATE',
+        steps: [
+          'Go to the Instruction Templates tab.',
+          'Find the template you want to delete and click the vertical three-dot (⋮) button next to it.',
+          'Select Delete.',
+          'Click Delete again to confirm.'
+        ],
+        expected: 'The instruction template should be deleted successfully and removed from the list.'
+      },
+      {
+        id: 23, type: 'textarea', required: false,
+        title: 'DID YOU ENCOUNTER ANY OTHER ISSUES?',
+        hint: 'Please specify which feature is failing or has a problem.'
+      },
+      {
+        id: 24, type: 'file', required: false,
+        title: 'ATTACH SCREENSHOT (IF AVAILABLE)'
+      },
+      {
+        id: 25, type: 'textarea', required: false,
+        title: 'SUGGESTIONS FOR IMPROVEMENT',
+        hint: 'Please share any recommendations to improve the system.'
+      },
+      {
+        id: 26, type: 'final', required: true,
+        title: 'FINAL ACCEPTANCE',
+        hint: 'Based on your testing, do you approve this system for deployment?'
+      },
+      {
+        id: 27, type: 'textarea', required: false,
+        title: 'ADDITIONAL COMMENTS'
+      }
+    ];
+
+    // ── MANAGER questions ─────────────────────────────────────
+    const managerQuestions = [
+      {
+        id: 1, type: 'text', required: true,
+        title: 'FULL NAME'
+      },
+      {
+        id: 2, type: 'test', required: true,
+        title: 'LOGIN & AUTHENTICATION',
+        steps: [
+          'Go to https://ape.onehealthnetwork.com.ph',
+          'Enter your username and password.',
+          'Click Log In.'
+        ],
+        expected: 'You will be redirected to the Dashboard screen after logging in successfully.'
+      },
+      {
+        id: 3, type: 'test', required: true,
+        title: 'EDIT PROFILE',
+        steps: [
+          'Click your name at the top of the sidebar to open your profile.',
+          'Update the information you want to change (such as your personal details, profile photo, e-signature, or password).',
+          'Click Save.'
+        ],
+        expected: 'Your changes will be saved successfully.'
+      },
+      {
+        id: 4, type: 'test', required: true,
+        title: 'ASN APPROVAL & REJECTION',
+        steps: [
+          'Navigate to the ASN tab.',
+          'Find the ASN you want to check, then click View.',
+          'Scroll down to the bottom of the page.',
+          'Choose Approve or Reject.'
+        ],
+        expected: 'The ASN will be successfully approved or rejected, and the status will update accordingly.'
+      },
+      {
+        id: 5, type: 'test', required: true,
+        title: 'ADD MEDICAL SERVICE',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click Browse All Services.',
+          'Click + Add New Service.',
+          'Fill out the required details in the form.',
+          'Click Create.'
+        ],
+        expected: 'The new service should be added successfully and appear in the list of services.'
+      },
+      {
+        id: 6, type: 'test', required: true,
+        title: 'EDIT MEDICAL SERVICE',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click Browse All Services.',
+          'Find the service you want to update and click the vertical three-dot (⋮) button next to it.',
+          'Select Edit Service.',
+          'Update the information as needed.',
+          'Click Save Changes.'
+        ],
+        expected: 'The service should be updated successfully, and the changes should appear in the list.'
+      },
+      {
+        id: 7, type: 'test', required: true,
+        title: 'DEACTIVATE MEDICAL SERVICE',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click Browse All Services.',
+          'Find the service you want to deactivate and click the vertical three-dot (⋮) button next to it.',
+          'Select Deactivate.',
+          'Click Confirm.'
+        ],
+        expected: 'The service should be deactivated successfully and no longer active in the list.'
+      },
+      {
+        id: 8, type: 'test', required: true,
+        title: 'ACTIVATE MEDICAL SERVICE',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click Browse All Services.',
+          'Find the deactivated service and click the vertical three-dot (⋮) button next to it.',
+          'Select Activate.',
+          'Click Confirm.'
+        ],
+        expected: 'The service should be activated successfully and appear as active in the list.'
+      },
+      {
+        id: 9, type: 'test', required: true,
+        title: 'DELETE MEDICAL SERVICE',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click Browse All Services.',
+          'Find the service you want to delete and click the vertical three-dot (⋮) button next to it.',
+          'Select Delete.',
+          'Click Delete again to confirm.'
+        ],
+        expected: 'The service should be deleted successfully and removed from the list.'
+      },
+      {
+        id: 10, type: 'test', required: true,
+        title: 'ADD MEDICAL SERVICE PACKAGE',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click Package Library.',
+          'Click + Add Package.',
+          'Fill out the required details in the form.',
+          'Click Create.'
+        ],
+        expected: 'The package should be added successfully and appear in the Package Library.'
+      },
+      {
+        id: 11, type: 'test', required: true,
+        title: 'EDIT MEDICAL SERVICE PACKAGE',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click Package Library.',
+          'Find the package you want to update and click the vertical three-dot (⋮) button next to it.',
+          'Select Edit.',
+          'Update the information as needed.',
+          'Click Save Changes.'
+        ],
+        expected: 'The package should be updated successfully, and the changes should appear in the list.'
+      },
+      {
+        id: 12, type: 'test', required: true,
+        title: 'DEACTIVATE MEDICAL SERVICE PACKAGE',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click Package Library.',
+          'Find the package you want to deactivate and click the vertical three-dot (⋮) button next to it.',
+          'Select Deactivate.',
+          'Click Confirm.'
+        ],
+        expected: 'The package should be deactivated successfully and marked as inactive in the list.'
+      },
+      {
+        id: 13, type: 'test', required: true,
+        title: 'ACTIVATE MEDICAL SERVICE PACKAGE',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click Package Library.',
+          'Find the package you want to activate and click the vertical three-dot (⋮) button next to it.',
+          'Select Activate.',
+          'Click Confirm.'
+        ],
+        expected: 'The package should be activated successfully and appear as active in the list.'
+      },
+      {
+        id: 14, type: 'test', required: true,
+        title: 'ADD HMO',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click HMO Management.',
+          'Click + Add HMO.',
+          'Fill out the required details in the form.',
+          'Click Create HMO.'
+        ],
+        expected: 'The HMO should be added successfully and appear in the HMO Management list.'
+      },
+      {
+        id: 15, type: 'test', required: true,
+        title: 'DEACTIVATE HMO',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click HMO Management.',
+          'Find the HMO you want to deactivate in the list and click the vertical three-dot (⋮) button next to it.',
+          'Select Deactivate.',
+          'Click Confirm.'
+        ],
+        expected: 'The HMO should be deactivated successfully and marked as inactive in the list.'
+      },
+      {
+        id: 16, type: 'test', required: true,
+        title: 'ACTIVATE HMO',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click HMO Management.',
+          'Find the HMO you want to activate in the list and click the vertical three-dot (⋮) button next to it.',
+          'Select Activate.',
+          'Click Confirm.'
+        ],
+        expected: 'The HMO should be activated successfully and appear as active in the list.'
+      },
+      {
+        id: 17, type: 'test', required: true,
+        title: 'MANAGE HMO PACKAGES PRICES',
+        steps: [
+          'Go to the Medical Services tab.',
+          'Click HMO Management.',
+          'Find the HMO package you want to update and click Manage.',
+          'Update the prices or other details in the form.',
+          'Click Save Changes.'
+        ],
+        expected: 'The HMO package prices should be saved successfully and reflected in the list.'
+      },
+      {
+        id: 18, type: 'test', required: true,
+        title: 'BUDGET SHEET APPROVAL & REJECTION',
+        note: 'For Managing Directors only',
+        steps: [
+          'Go to the Budget Sheets tab.',
+          'Choose a company from the list.',
+          'Click View & Manage.',
+          'Click Approve or Reject.'
+        ],
+        expected: 'The selected company or budget sheet should be approved or rejected by the director.'
+      },
+      {
+        id: 19, type: 'textarea', required: false,
+        title: 'DID YOU ENCOUNTER ANY OTHER ISSUES?',
+        hint: 'Please specify which feature is failing or has a problem.'
+      },
+      {
+        id: 20, type: 'file', required: false,
+        title: 'ATTACH SCREENSHOT (IF AVAILABLE)'
+      },
+      {
+        id: 21, type: 'textarea', required: false,
+        title: 'SUGGESTIONS FOR IMPROVEMENT',
+        hint: 'Please share any recommendations to improve the system.'
+      },
+      {
+        id: 22, type: 'final', required: true,
+        title: 'FINAL ACCEPTANCE',
+        hint: 'Based on your testing, do you approve this system for deployment?'
+      },
+      {
+        id: 23, type: 'textarea', required: false,
+        title: 'ADDITIONAL COMMENTS'
+      }
+    ];
+
+    // ─────────────────────────────────────────────────────────
+    // VIEW MANAGEMENT
+    // ─────────────────────────────────────────────────────────
+
+    let currentRole = null;
+
+    function showView(id) {
+      ['view-home', 'view-form', 'view-success'].forEach(v => {
+        const el = document.getElementById(v);
+        if (v === 'view-form') {
+          el.style.display = (v === id) ? 'block' : 'none';
+        } else if (v === 'view-success') {
+          el.style.display = (v === id) ? 'flex' : 'none';
+        } else {
+          el.style.display = (v === id) ? 'flex' : 'none';
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goHome() {
+      currentRole = null;
+      showView('view-home');
+    }
+
+    function openForm(role) {
+      currentRole = role;
+      const questions = role === 'sales' ? salesQuestions : managerQuestions;
+      const roleLabel = role === 'sales' ? 'Sales Team' : 'Supervisor / Director';
+
+      document.getElementById('form-role-label').textContent = roleLabel;
+      renderForm(questions, role);
+      showView('view-form');
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // FORM RENDERING
+    // ─────────────────────────────────────────────────────────
+
+    function renderForm(questions, role) {
+      const body = document.getElementById('form-body');
+      const roleTitle = role === 'sales' ? 'Sales Team UAT Survey' : 'Supervisor / Director UAT Survey';
+      const roleSub = role === 'sales'
+        ? 'Please complete all test scenarios below and provide your assessment for each item.'
+        : 'Please complete all test scenarios below and provide your assessment for each item.';
+
+      let html = `
+        <div class="form-banner">
+          <div class="form-banner-title">${roleTitle}</div>
+          <div class="form-banner-sub">${roleSub}</div>
+        </div>
+      `;
+
+      questions.forEach(q => {
+        html += renderQuestion(q, role);
+      });
+
+      html += `
+        <div class="form-submit-area">
+          <div class="form-error-msg" id="form-error-msg">Please answer all required fields before submitting.</div>
+          <button class="form-submit-btn" onclick="submitForm('${role}')">Submit Response →</button>
+        </div>
+      `;
+
+      body.innerHTML = html;
+
+      // File input listener
+      questions.filter(q => q.type === 'file').forEach(q => {
+        const fileInput = document.getElementById(`file-input-${q.id}`);
+        const fileName  = document.getElementById(`file-name-${q.id}`);
+        if (fileInput && fileName) {
+          fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+              fileName.textContent = fileInput.files[0].name;
+              fileName.style.display = 'block';
+            } else {
+              fileName.style.display = 'none';
+            }
+          });
+        }
+      });
+    }
+
+    function renderQuestion(q, role) {
+      const requiredStar = q.required ? '<span class="q-required-star">*</span>' : '';
+      const optionalTag  = !q.required ? '<span class="q-optional-tag">(Optional)</span>' : '';
+
+      let inner = '';
+
+      if (q.type === 'text') {
+        inner = `
+          <input
+            class="q-input"
+            type="text"
+            id="q-${q.id}"
+            placeholder="Type your full name here…"
+          />
+        `;
+      }
+
+      else if (q.type === 'textarea') {
+        inner = `
+          ${q.hint ? `<div class="q-hint">${q.hint}</div>` : ''}
+          <textarea
+            class="q-textarea"
+            id="q-${q.id}"
+            placeholder="Type your answer here…"
+          ></textarea>
+        `;
+      }
+
+      else if (q.type === 'file') {
+        inner = `
+          <div class="q-file-area">
+            <input type="file" id="file-input-${q.id}" accept="image/*,.pdf" />
+            <div class="q-file-icon">📎</div>
+            <div class="q-file-text"><strong>Click to upload</strong> or drag and drop</div>
+            <div class="q-file-text" style="font-size:0.75rem;margin-top:0.2rem;">PNG, JPG, GIF, PDF (max 10MB)</div>
+            <div class="q-file-name" id="file-name-${q.id}"></div>
+          </div>
+        `;
+      }
+
+      else if (q.type === 'test') {
+        const stepsHtml = q.steps.map((s, i) => `
+          <div class="q-step">
+            <span class="q-step-num">${i + 1}</span>
+            <span>${escapeHtml(s)}</span>
+          </div>
+        `).join('');
+
+        const radioHtml = TEST_OPTIONS.map(opt => `
+          <label class="q-radio-label" data-val="${opt}">
+            <input type="radio" name="q-${q.id}" value="${opt}" />
+            <span class="q-radio-circle"></span>
+            <span class="q-radio-emoji">${TEST_EMOJIS[opt]}</span>
+            <span>${opt}</span>
+          </label>
+        `).join('');
+
+        const noteHtml = q.note ? `<div style="margin-bottom:0.5rem;padding:0.45rem 0.85rem;background:#fef9ec;border:1px solid #fde68a;border-radius:8px;font-size:0.78rem;color:#92400e;font-weight:600;">⚠️ ${q.note}</div>` : '';
+
+        inner = `
+          ${noteHtml}
+          <div class="q-steps-block">
+            <div class="q-steps-header">Steps to Execute</div>
+            <div class="q-steps-body">${stepsHtml}</div>
+          </div>
+          <div class="q-expected">
+            <span class="q-expected-label">What should happen?</span>
+            ${escapeHtml(q.expected)}
+          </div>
+          <div class="q-radio-group" id="rg-${q.id}">
+            ${radioHtml}
+          </div>
+          <div class="q-hint" style="margin-top:0.5rem;">Respondents can select up to 1</div>
+        `;
+      }
+
+      else if (q.type === 'final') {
+        const radioHtml = FINAL_OPTIONS.map((opt, i) => `
+          <label class="q-radio-label">
+            <input type="radio" name="q-${q.id}" value="${opt}" />
+            <span class="q-radio-circle"></span>
+            <span class="q-radio-emoji">${i === 0 ? '✅' : '❌'}</span>
+            <span>${opt}</span>
+          </label>
+        `).join('');
+
+        inner = `
+          ${q.hint ? `<div class="q-hint" style="margin-bottom:0.6rem;">${q.hint}</div>` : ''}
+          <div class="q-radio-group" id="rg-${q.id}">
+            ${radioHtml}
+          </div>
+          <div class="q-hint" style="margin-top:0.5rem;">Respondents can select up to 1</div>
+        `;
+      }
+
+      return `
+        <div class="q-card" id="qcard-${q.id}">
+          <div class="q-number">Question ${q.id}</div>
+          <div class="q-title">${q.title}${requiredStar}${optionalTag}</div>
+          ${inner}
+        </div>
+      `;
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // FORM SUBMISSION & VALIDATION
+    // ─────────────────────────────────────────────────────────
+
+    function submitForm(role) {
+      const questions = role === 'sales' ? salesQuestions : managerQuestions;
+      let hasError = false;
+      const responses = {};
+
+      // Reset errors
+      questions.forEach(q => {
+        const card = document.getElementById(`qcard-${q.id}`);
+        if (card) card.classList.remove('required-error');
+      });
+
+      questions.forEach(q => {
+        const card = document.getElementById(`qcard-${q.id}`);
+
+        if (q.type === 'text') {
+          const el = document.getElementById(`q-${q.id}`);
+          const val = el ? el.value.trim() : '';
+          responses[q.id] = val;
+          if (q.required && !val) {
+            if (card) card.classList.add('required-error');
+            hasError = true;
+          }
+        }
+
+        else if (q.type === 'textarea') {
+          const el = document.getElementById(`q-${q.id}`);
+          responses[q.id] = el ? el.value.trim() : '';
+          // optional — no error
+        }
+
+        else if (q.type === 'file') {
+          const el = document.getElementById(`file-input-${q.id}`);
+          responses[q.id] = (el && el.files.length > 0) ? el.files[0].name : '';
+          // optional
+        }
+
+        else if (q.type === 'test' || q.type === 'final') {
+          const selected = document.querySelector(`input[name="q-${q.id}"]:checked`);
+          responses[q.id] = selected ? selected.value : '';
+          if (q.required && !selected) {
+            if (card) card.classList.add('required-error');
+            hasError = true;
+          }
+        }
+      });
+
+      const errMsg = document.getElementById('form-error-msg');
+
+      if (hasError) {
+        if (errMsg) errMsg.style.display = 'block';
+        // Scroll to first error
+        const firstError = document.querySelector('.required-error');
+        if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      if (errMsg) errMsg.style.display = 'none';
+
+      // Log collected data (connect to backend as needed)
+      console.log('[UAT Form Submitted]', { role, responses });
+
+      showView('view-success');
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // INIT
+    // ─────────────────────────────────────────────────────────
+    showView('view-home');
+  </script>
 </body>
 </html>

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -Command \"\\(Get-Content ''C:\\\\Users\\\\Red\\\\Desktop\\\\Red\\\\GitHub\\\\QR-End-Point\\\\index.html''\\).Count\")",
+      "Bash(powershell -Command \"Select-String -Path ''C:\\\\Users\\\\Red\\\\Desktop\\\\Red\\\\GitHub\\\\QR-End-Point\\\\index.html'' -Pattern ''ROLE_META|getQuestions|accountingQuestions\\\\s*=|mobileHeadQuestions\\\\s*=|operationsQuestions\\\\s*=|doctorQuestions\\\\s*=|ov-pass|ov-roles|tab-content-accounting|tab-content-doctor|openForm.*accounting'' | Select-Object LineNumber, Line\")",
+      "Bash(powershell -Command \"Select-String -Path ''C:\\\\Users\\\\Red\\\\Desktop\\\\Red\\\\GitHub\\\\QR-End-Point\\\\index.html'' -Pattern ''el\\\\.innerHTML = html'' | Select-Object LineNumber, Line\")",
+      "Bash(powershell -Command \"Select-String -Path ''C:\\\\Users\\\\Red\\\\Desktop\\\\Red\\\\GitHub\\\\QR-End-Point\\\\index.html'' -Pattern ''showDeleteConfirm|confirmDelete|cancelDelete|all-resp-card|all-resp-row|All Submissions'' | Select-Object LineNumber, Line\")"
+    ]
+  }
+}

@@ -184,8 +184,7 @@
     .q-radio-label[data-val="Pass"]:has(input:checked) .q-radio-circle { border-color: var(--pass); background: var(--pass); }
     .q-radio-label[data-val="Fail"]:has(input:checked) { background: var(--fail-bg); border-color: var(--fail); }
     .q-radio-label[data-val="Fail"]:has(input:checked) .q-radio-circle { border-color: var(--fail); background: var(--fail); }
-    .q-radio-label[data-val="N/A"]:has(input:checked) { background: var(--na-bg); border-color: var(--na); }
-    .q-radio-label[data-val="N/A"]:has(input:checked) .q-radio-circle { border-color: var(--na); background: var(--na); }
+    /* N/A option removed */
     .q-radio-emoji { font-size: 1rem; }
     .q-input, .q-textarea {
       margin-top: 0.85rem; width: 100%; padding: 0.75rem 1rem;
@@ -280,13 +279,13 @@
     .ov-sub { font-size: 0.72rem; color: #94a3b8; margin-top: 0.15rem; }
 
     /* Tabs */
-    .analytics-tabs-wrap { padding: 1.5rem 2rem 0; }
-    .analytics-tabs { display: flex; gap: 0.5rem; background: #fff; border: 1.5px solid var(--blue-mid); border-radius: 14px; padding: 0.35rem; width: fit-content; }
+    .analytics-tabs-wrap { padding: 1.5rem 2rem 0; overflow-x: auto; padding-bottom: 0.25rem; }
+    .analytics-tabs { display: flex; gap: 0.5rem; background: #fff; border: 1.5px solid var(--blue-mid); border-radius: 14px; padding: 0.35rem; width: max-content; }
     .atab-btn {
       padding: 0.5rem 1.4rem; border-radius: 10px; border: none;
       font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600;
       color: var(--muted); background: transparent; cursor: pointer;
-      transition: background 0.18s, color 0.18s;
+      transition: background 0.18s, color 0.18s; white-space: nowrap; flex-shrink: 0;
     }
     .atab-btn.active { background: var(--blue); color: #fff; box-shadow: 0 2px 10px rgba(26,86,219,0.28); }
 
@@ -435,6 +434,186 @@
       0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)}
       40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)}
     }
+
+    /* ══════════════════════════════════════════════
+       ANALYTICS — GENERAL TAB
+    ══════════════════════════════════════════════ */
+    .gen-hero {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+      border-radius: 18px; padding: 1.75rem 2rem; margin-bottom: 1.25rem; color: #fff;
+    }
+    .gen-hero-top { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.1rem; }
+    .gen-hero-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.04em; line-height: 1; }
+    .gen-hero-sub { font-size: 0.82rem; opacity: 0.75; margin-top: 0.3rem; }
+    .gen-hero-status { display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.15); border-radius: 12px; padding: 0.65rem 1rem; }
+    .gen-hero-icon { font-size: 1.6rem; }
+    .gen-hero-status-text { font-size: 0.9rem; font-weight: 700; }
+    .gen-hero-badges { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .gen-hero-badge { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.22); border-radius: 999px; padding: 0.3rem 0.85rem; font-size: 0.78rem; font-weight: 600; }
+
+    .gen-kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 1.25rem; }
+    @media(max-width:900px){ .gen-kpi-grid { grid-template-columns: repeat(2,1fr); } }
+    @media(max-width:480px){ .gen-kpi-grid { grid-template-columns: 1fr; } }
+    .gen-kpi-card { background: #fff; border: 2px solid var(--blue-mid); border-radius: 16px; padding: 1.25rem 1.4rem; box-shadow: var(--shadow); transition: transform 0.15s; }
+    .gen-kpi-card:hover { transform: translateY(-2px); }
+    .gen-kpi-card.kpi-green { border-color: #bbf7d0; background: linear-gradient(135deg,#fff 55%,#f0fdf4); }
+    .gen-kpi-card.kpi-yellow { border-color: #fde68a; background: linear-gradient(135deg,#fff 55%,#fffbeb); }
+    .gen-kpi-card.kpi-red { border-color: #fecaca; background: linear-gradient(135deg,#fff 55%,#fef2f2); }
+    .gen-kpi-icon { font-size: 1.4rem; margin-bottom: 0.45rem; }
+    .gen-kpi-value { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 0.02em; line-height: 1; color: var(--text); }
+    .gen-kpi-value.good { color: var(--pass); }
+    .gen-kpi-value.warn { color: #d97706; }
+    .gen-kpi-value.bad  { color: var(--fail); }
+    .gen-kpi-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin-top: 0.2rem; }
+    .gen-kpi-sub { font-size: 0.7rem; color: #94a3b8; margin-top: 0.3rem; line-height: 1.4; }
+
+    .gen-section-card { background: #fff; border: 1.5px solid var(--blue-mid); border-radius: 16px; padding: 1.4rem 1.6rem; box-shadow: var(--shadow); margin-bottom: 1.25rem; }
+    .gen-section-title { font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 0.2rem; }
+    .gen-section-sub { font-size: 0.75rem; color: var(--muted); margin-bottom: 1rem; }
+
+    /* Comparison table */
+    .gen-comp-table { width: 100%; border-collapse: collapse; margin-top: 0.85rem; font-size: 0.85rem; }
+    .gen-comp-table th { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 0.5rem 0.85rem; text-align: left; border-bottom: 2px solid #f0f4ff; }
+    .gen-comp-table td { padding: 0.9rem 0.85rem; border-bottom: 1px solid #f0f4ff; vertical-align: middle; }
+    .gen-comp-table tr:last-child td { border-bottom: none; }
+    .gen-comp-table tr:hover td { background: #f8faff; }
+    .gen-comp-role { font-weight: 700; color: var(--text); }
+    .gen-status-label { font-size: 0.82rem; font-weight: 600; }
+
+    .gen-rate-badge { display: inline-block; padding: 0.22rem 0.7rem; border-radius: 999px; font-size: 0.78rem; font-weight: 700; }
+    .gen-rate-badge.good { background: var(--pass-bg); color: #166534; border: 1px solid var(--pass-border); }
+    .gen-rate-badge.warn { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+    .gen-rate-badge.bad  { background: var(--fail-bg); color: #991b1b; border: 1px solid var(--fail-border); }
+    .gen-rate-badge.na   { background: var(--na-bg); color: #475569; border: 1px solid var(--na-border); }
+
+    /* Failing scenarios */
+    .gen-failing-row { display: grid; grid-template-columns: 210px 1fr 60px; align-items: center; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid #f0f4ff; }
+    .gen-failing-row:last-child { border-bottom: none; }
+    @media(max-width:640px){ .gen-failing-row { grid-template-columns: 1fr; gap: 0.35rem; } }
+    .gen-failing-left { display: flex; flex-direction: column; gap: 0.25rem; }
+    .gen-failing-name { font-size: 0.82rem; font-weight: 600; color: var(--text); line-height: 1.3; }
+    .gen-role-chip { display: inline-block; font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.15rem 0.55rem; border-radius: 999px; width: fit-content; }
+    .gen-role-chip.sales       { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+    .gen-role-chip.manager     { background: #fdf4ff; color: #7e22ce; border: 1px solid #e9d5ff; }
+    .gen-role-chip.accounting  { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .gen-role-chip.mobilehead  { background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; }
+    .gen-role-chip.operations  { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .gen-role-chip.doctor      { background: #ecfdf5; color: #065f46; border: 1px solid #6ee7b7; }
+    .gen-failing-bar-wrap { display: flex; flex-direction: column; gap: 0.3rem; }
+    .gen-failing-bar { display: flex; height: 16px; border-radius: 6px; overflow: hidden; background: #f0f4ff; }
+    .gen-failing-bar-pass { background: var(--pass); transition: width 0.5s ease; }
+    .gen-failing-bar-fail { background: var(--fail); transition: width 0.5s ease; }
+    .gen-failing-counts { display: flex; gap: 0.75rem; font-size: 0.68rem; font-weight: 600; }
+    .gen-failing-rate { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; text-align: right; }
+    .gen-failing-rate.good { color: var(--pass); }
+    .gen-failing-rate.warn { color: #d97706; }
+    .gen-failing-rate.bad  { color: var(--fail); }
+
+    /* Feedback items */
+    .gen-feedback-item { padding: 0.65rem 0; border-bottom: 1px solid #f0f4ff; }
+    .gen-feedback-item:last-child { border-bottom: none; }
+    .gen-feedback-meta { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; }
+    .gen-feedback-name { font-size: 0.72rem; font-weight: 700; color: var(--blue); }
+    .gen-feedback-text { font-size: 0.83rem; color: var(--text); line-height: 1.55; }
+
+    /* ══════════════════════════════════════════════
+       ANALYTICS — ROLE TAB IMPROVEMENTS
+    ══════════════════════════════════════════════ */
+    .role-health-banner {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1rem 1.4rem; border-radius: 14px; margin-bottom: 1.25rem;
+      border: 1.5px solid; font-weight: 600;
+    }
+    .role-health-banner.good { background: var(--pass-bg); border-color: var(--pass-border); color: #166534; }
+    .role-health-banner.warn { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+    .role-health-banner.bad  { background: var(--fail-bg); border-color: var(--fail-border); color: #991b1b; }
+    .role-health-banner.na   { background: var(--na-bg); border-color: var(--na-border); color: #475569; }
+    .role-health-icon { font-size: 1.6rem; flex-shrink: 0; }
+    .role-health-text { display: flex; flex-direction: column; }
+    .role-health-title { font-size: 0.95rem; font-weight: 700; }
+    .role-health-sub { font-size: 0.78rem; opacity: 0.85; margin-top: 0.1rem; }
+
+    /* Colored accent borders on stat cards */
+    .mini-stat { border-left: 4px solid var(--blue-mid); }
+    .mini-stat.accent-blue   { border-left-color: var(--blue); }
+    .mini-stat.accent-green  { border-left-color: var(--pass); }
+    .mini-stat.accent-red    { border-left-color: var(--fail); }
+    .mini-stat.accent-yellow { border-left-color: #f59e0b; }
+    .mini-stat-val.good { color: var(--pass); }
+    .mini-stat-val.warn { color: #d97706; }
+    .mini-stat-val.bad  { color: var(--fail); }
+
+    /* Custom chart legend */
+    .chart-legend-custom { display: flex; justify-content: center; gap: 1.25rem; margin-top: 0.85rem; }
+    .clc { font-size: 0.8rem; font-weight: 600; }
+    .clc-pass { color: var(--pass); }
+    .clc-fail { color: var(--fail); }
+
+    /* Breakdown improvements */
+    .breakdown-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .breakdown-legend { display: flex; gap: 1rem; font-size: 0.72rem; font-weight: 700; }
+    .bl-pass { color: var(--pass); }
+    .bl-fail { color: var(--fail); }
+    .qa-bar { height: 20px; border-radius: 6px; }
+    .qa-bar-pass { border-radius: 6px 0 0 6px; }
+    .qa-bar-fail { border-radius: 0 6px 6px 0; }
+
+    /* Grouped feedback in role tab */
+    .feedback-group { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #f0f4ff; }
+    .feedback-group:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+    .feedback-group-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin-bottom: 0.65rem; }
+    .screenshots-wrap { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 0.5rem; }
+    .screenshot-item { text-align: center; }
+    .screenshot-name { font-size: 0.62rem; color: var(--muted); margin-top: 0.25rem; }
+
+    /* Individual response improvements */
+    .indiv-row-header { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .indiv-header-left { display: flex; flex-direction: column; gap: 0.1rem; flex: 1; min-width: 120px; }
+    .indiv-dot-grid { display: flex; flex-wrap: wrap; gap: 2px; max-width: 240px; }
+
+    /* ══════════════════════════════════════════════
+       ALL SUBMISSIONS LIST
+    ══════════════════════════════════════════════ */
+    .all-resp-card { background: #fff; border: 1.5px solid var(--blue-mid); border-radius: 16px; box-shadow: var(--shadow); margin-bottom: 1.25rem; overflow: hidden; }
+    .all-resp-header { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.5rem; border-bottom: 1.5px solid #f0f4ff; }
+    .all-resp-title { font-size: 0.88rem; font-weight: 700; color: var(--text); }
+    .all-resp-count { font-size: 0.72rem; font-weight: 600; color: var(--blue); background: var(--blue-light); border: 1px solid var(--blue-mid); border-radius: 999px; padding: 0.18rem 0.65rem; }
+    .all-resp-row {
+      display: grid; grid-template-columns: auto 1fr auto auto; align-items: center;
+      gap: 1rem; padding: 0.8rem 1.5rem; border-bottom: 1px solid #f0f4ff; transition: background 0.12s;
+    }
+    .all-resp-row:last-child { border-bottom: none; }
+    .all-resp-row:hover { background: #f8faff; }
+    @media(max-width:680px) { .all-resp-row { grid-template-columns: auto 1fr auto; } }
+    .all-resp-info { display: flex; flex-direction: column; gap: 0.15rem; }
+    .all-resp-name { font-size: 0.88rem; font-weight: 700; color: var(--text); }
+    .all-resp-date { font-size: 0.72rem; color: var(--muted); }
+    .all-resp-approval { font-size: 0.7rem; font-weight: 700; padding: 0.22rem 0.65rem; border-radius: 999px; white-space: nowrap; }
+    .all-resp-approval.yes { background: var(--pass-bg); color: #166534; border: 1px solid var(--pass-border); }
+    .all-resp-approval.no  { background: var(--fail-bg); color: #991b1b; border: 1px solid var(--fail-border); }
+    /* Delete control */
+    .all-resp-del-wrap { display: flex; align-items: center; gap: 0.4rem; flex-shrink: 0; }
+    .all-resp-del-btn {
+      background: none; border: 1.5px solid #e2e8f0; border-radius: 8px;
+      padding: 0.28rem 0.55rem; font-size: 0.78rem; color: #94a3b8;
+      cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s; line-height: 1;
+    }
+    .all-resp-del-btn:hover { background: var(--fail-bg); border-color: var(--fail); color: var(--fail); }
+    .all-resp-confirm { display: none; align-items: center; gap: 0.4rem; }
+    .all-resp-confirm.show { display: flex; }
+    .all-resp-confirm-label { font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+    .all-resp-confirm-yes {
+      background: var(--fail); border: none; border-radius: 7px;
+      padding: 0.26rem 0.6rem; font-size: 0.74rem; font-weight: 700; color: #fff;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .all-resp-confirm-yes:hover { background: #b91c1c; }
+    .all-resp-confirm-cancel {
+      background: none; border: 1.5px solid #e2e8f0; border-radius: 7px;
+      padding: 0.26rem 0.6rem; font-size: 0.74rem; font-weight: 600; color: var(--muted);
+      cursor: pointer; transition: border-color 0.15s, color 0.15s;
+    }
+    .all-resp-confirm-cancel:hover { border-color: var(--muted); color: var(--text); }
   </style>
 </head>
 <body>
@@ -472,36 +651,40 @@
           <div class="card-arrow">↓</div>
         </div>
 
-        <div class="card card--disabled">
+        <div class="card" onclick="openForm('accounting')">
           <div class="card-icon">🧾</div>
           <div class="card-info">
             <span class="card-name">Accounting</span>
             <span class="card-tag">Finance & Accounting</span>
           </div>
+          <div class="card-arrow">↓</div>
         </div>
 
-        <div class="card card--disabled">
+        <div class="card" onclick="openForm('mobilehead')">
           <div class="card-icon">👨🏻‍💻</div>
           <div class="card-info">
             <span class="card-name">Mobile Head</span>
             <span class="card-tag">Head Operations</span>
           </div>
+          <div class="card-arrow">↓</div>
         </div>
 
-        <div class="card card--disabled">
+        <div class="card" onclick="openForm('operations')">
           <div class="card-icon">⚙️</div>
           <div class="card-info">
             <span class="card-name">Operations</span>
             <span class="card-tag">Operations Team</span>
           </div>
+          <div class="card-arrow">↓</div>
         </div>
 
-        <div class="card card--disabled">
+        <div class="card" onclick="openForm('doctor')">
           <div class="card-icon">🩺</div>
           <div class="card-info">
             <span class="card-name">Doctor</span>
             <span class="card-tag">Assessing Physician</span>
           </div>
+          <div class="card-arrow">↓</div>
         </div>
       </div>
 
@@ -564,25 +747,45 @@
     </div>
 
     <div class="analytics-overview">
-      <div class="overview-grid" id="overview-grid">
-        <div class="ov-card"><div class="ov-value blue" id="ov-total">—</div><div class="ov-label">Total Responses</div></div>
-        <div class="ov-card"><div class="ov-value blue" id="ov-sales">—</div><div class="ov-label">Sales Responses</div></div>
-        <div class="ov-card"><div class="ov-value blue" id="ov-manager">—</div><div class="ov-label">Manager Responses</div></div>
-        <div class="ov-card"><div class="ov-value green" id="ov-approval">—</div><div class="ov-label">Overall Approval Rate</div><div class="ov-sub">Approved system for deployment</div></div>
+      <div class="overview-grid">
+        <div class="ov-card"><div class="ov-value blue" id="ov-total">—</div><div class="ov-label">Total Responses</div><div class="ov-sub">All roles combined</div></div>
+        <div class="ov-card"><div class="ov-value green" id="ov-pass">—</div><div class="ov-label">Overall Pass Rate</div><div class="ov-sub">Across all test scenarios</div></div>
+        <div class="ov-card"><div class="ov-value blue" id="ov-roles">—</div><div class="ov-label">Roles Submitted</div><div class="ov-sub">Out of 6 roles</div></div>
+        <div class="ov-card"><div class="ov-value green" id="ov-approval">—</div><div class="ov-label">Overall Approval Rate</div><div class="ov-sub">Approved for deployment</div></div>
       </div>
     </div>
 
     <div class="analytics-tabs-wrap">
       <div class="analytics-tabs">
-        <button class="atab-btn active" data-tab="sales" onclick="switchTab('sales')">📋 Sales</button>
-        <button class="atab-btn" data-tab="manager" onclick="switchTab('manager')">🧑‍💼 Manager</button>
+        <button class="atab-btn active"  data-tab="general"     onclick="switchTab('general')">🌐 General</button>
+        <button class="atab-btn"         data-tab="sales"        onclick="switchTab('sales')">📋 Sales</button>
+        <button class="atab-btn"         data-tab="manager"      onclick="switchTab('manager')">🧑‍💼 Manager</button>
+        <button class="atab-btn"         data-tab="accounting"   onclick="switchTab('accounting')">🧾 Accounting</button>
+        <button class="atab-btn"         data-tab="mobilehead"   onclick="switchTab('mobilehead')">👨🏻‍💻 Mobile Head</button>
+        <button class="atab-btn"         data-tab="operations"   onclick="switchTab('operations')">⚙️ Operations</button>
+        <button class="atab-btn"         data-tab="doctor"       onclick="switchTab('doctor')">🩺 Doctor</button>
       </div>
     </div>
 
-    <div class="atab-content active" data-tab="sales" id="tab-content-sales">
+    <div class="atab-content active" data-tab="general"    id="tab-content-general">
       <div class="analytics-loading"><div class="spinner"></div></div>
     </div>
-    <div class="atab-content" data-tab="manager" id="tab-content-manager">
+    <div class="atab-content" data-tab="sales"             id="tab-content-sales">
+      <div class="analytics-loading"><div class="spinner"></div></div>
+    </div>
+    <div class="atab-content" data-tab="manager"           id="tab-content-manager">
+      <div class="analytics-loading"><div class="spinner"></div></div>
+    </div>
+    <div class="atab-content" data-tab="accounting"        id="tab-content-accounting">
+      <div class="analytics-loading"><div class="spinner"></div></div>
+    </div>
+    <div class="atab-content" data-tab="mobilehead"        id="tab-content-mobilehead">
+      <div class="analytics-loading"><div class="spinner"></div></div>
+    </div>
+    <div class="atab-content" data-tab="operations"        id="tab-content-operations">
+      <div class="analytics-loading"><div class="spinner"></div></div>
+    </div>
+    <div class="atab-content" data-tab="doctor"            id="tab-content-doctor">
       <div class="analytics-loading"><div class="spinner"></div></div>
     </div>
   </div>
@@ -633,8 +836,8 @@
     // ─────────────────────────────────────────────
     // QUESTION DATA
     // ─────────────────────────────────────────────
-    const TEST_OPTIONS = ['Pass', 'Fail', 'N/A'];
-    const TEST_EMOJIS  = { Pass: '✅', Fail: '❌', 'N/A': '—' };
+    const TEST_OPTIONS = ['Pass', 'Fail'];
+    const TEST_EMOJIS  = { Pass: '✅', Fail: '❌' };
     const FINAL_OPTIONS = [
       'Yes, I approve this system for deployment',
       'No, I do not approve this system for deployment'
@@ -773,9 +976,151 @@
       { id:23, type:'textarea', required:false, title:'ADDITIONAL COMMENTS' }
     ];
 
+    const accountingQuestions = [
+      { id:1,  type:'text',     required:true,  title:'FULL NAME' },
+      { id:2,  type:'test',     required:true,  title:'LOGIN & AUTHENTICATION',                   short:'Login & Auth',
+        steps:['Go to https://ape.onehealthnetwork.com.ph','Enter your username and password.','Click Log In.'],
+        expected:'You will be redirected to the Dashboard screen after logging in successfully.' },
+      { id:3,  type:'test',     required:true,  title:'EDIT PROFILE',                             short:'Edit Profile',
+        steps:['Click your name at the top of the sidebar to open your profile.','Update the information you want to change (such as your personal details, profile photo, e-signature, or password).','Click Save.'],
+        expected:'Your changes will be saved successfully.' },
+      { id:4,  type:'test',     required:true,  title:'ASN APPROVAL & REJECTION',                 short:'ASN Approval',
+        steps:['Navigate to the ASN tab.','Find the ASN you want to check, then click View.','Scroll down to the bottom of the page.','Choose Approve or Reject.'],
+        expected:'The ASN will be successfully approved or rejected, and the status will update accordingly.' },
+      { id:5,  type:'test',     required:true,  title:'BUDGET SHEET APPROVAL',                    short:'Budget Approval',
+        steps:['Go to the Budget Management tab.','Choose a company from the list.','Click View & Manage.','Click Approve/Sign.'],
+        expected:'The selected company or budget sheet should be approved by the accounting.' },
+      { id:6,  type:'test',     required:true,  title:'GENERATE BILLING',                         short:'Generate Billing',
+        steps:['Go to the Billing & Invoicing tab.','Click Company Billings.','Find the billing item with the status For Billing.','Click Generate Billing.','In the billing statement section, click the cursor button next to the type of billing.'],
+        expected:'The billing statement should be generated successfully for the selected billing type.' },
+      { id:7,  type:'test',     required:true,  title:'MARK HMO AS PAID',                         short:'Mark HMO Paid',
+        steps:['Go to the Billing & Invoicing tab.','Click HMO Billings.','Find the company you want to mark as paid and click the vertical three-dot (⋮) button next to it.','Select View HMO Billing.','Click Mark as Paid.'],
+        expected:'The HMO billing should be marked as paid, and the status should update accordingly.' },
+      { id:8,  type:'test',     required:true,  title:'PAYMENT VERIFICATION APPROVAL & REJECTION', short:'Payment Verification',
+        steps:['Go to the Payment Verification tab.','Review the list of submitted payment documents.','Click on a document to view its details, such as payment amount, date, and proof of payment.','Decide whether to Approve or Reject the payment based on the details.','Click Verify Payment to approve, or Reject to decline the payment.','Confirm your action if prompted.'],
+        expected:"The selected payment should be marked as Approved or Rejected, and the status should update in the system so it's clear which payments have been verified." },
+      { id:9,  type:'textarea', required:false, title:'DID YOU ENCOUNTER ANY OTHER ISSUES?',       hint:'Please specify which feature is failing or has a problem.' },
+      { id:10, type:'file',     required:false, title:'ATTACH SCREENSHOT (IF AVAILABLE)' },
+      { id:11, type:'textarea', required:false, title:'SUGGESTIONS FOR IMPROVEMENT',               hint:'Please share any recommendations to improve the system.' },
+      { id:12, type:'final',    required:true,  title:'FINAL ACCEPTANCE',                          hint:'Based on your testing, do you approve this system for deployment?' },
+      { id:13, type:'textarea', required:false, title:'ADDITIONAL COMMENTS' }
+    ];
+
+    const mobileHeadQuestions = [
+      { id:1,  type:'text',     required:true,  title:'FULL NAME' },
+      { id:2,  type:'test',     required:true,  title:'LOGIN & AUTHENTICATION',                    short:'Login & Auth',
+        steps:['Go to https://ape.onehealthnetwork.com.ph','Enter your username and password.','Click Log In.'],
+        expected:'You will be redirected to the Dashboard screen after logging in successfully.' },
+      { id:3,  type:'test',     required:true,  title:'EDIT PROFILE',                              short:'Edit Profile',
+        steps:['Click your name at the top of the sidebar to open your profile.','Update the information you want to change (such as your personal details, profile photo, e-signature, or password).','Click Save.'],
+        expected:'Your changes will be saved successfully.' },
+      { id:4,  type:'test',     required:true,  title:'CREATE COMPANY ACCOUNT',                    short:'Create Company',
+        steps:["Go to the ASN tab.","In the New ASN Approved section, find the company and click Create Account next to View ASN. If you don't see the Create Account button, the company already has an account.",'Fill out the required information in the form.','Click Create Account & Finish.'],
+        expected:'The company account should be created successfully and ready to use.' },
+      { id:5,  type:'test',     required:true,  title:'RENEW COMPANY ACCOUNT',                     short:'Renew Company',
+        steps:['Go to the ASN tab.','In the New ASN Approved section, find the company you want to renew and click Renew next to View ASN.','Review the information in the form.','Click Confirm Renewal.'],
+        expected:'The company account should be renewed successfully and remain active and ready to use.' },
+      { id:6,  type:'test',     required:true,  title:'CREATE BUDGET SHEETS',                      short:'Budget Sheets',
+        steps:['Go to the Budget Sheet tab.','Click Generate in the Generate New Budget Sheet section.','Fill out the form and add your signature.','Click Save & Submit.'],
+        expected:'The budget sheet should be saved and submitted successfully.' },
+      { id:7,  type:'test',     required:true,  title:'CREATE LIQUIDATION REPORT',                 short:'Liquidation',
+        steps:['Go to the Budget Sheet tab.','Click Generate in the Budget Reports section.','Fill out the form and add your signature.','Click Submit Liquidation.'],
+        expected:'The liquidation report should be saved and submitted successfully.' },
+      { id:8,  type:'test',     required:true,  title:'CREATE NEW VERSION OF APE FORM',            short:'APE Form Version',
+        steps:['Go to the Template Manager tab.','In the Templates section, click + New Version.','Choose whether to copy from the default template or create a blank standard form.','Customize the new template as needed.','Click Save Template.'],
+        expected:'The new template version should be saved successfully and appear in the list of template versions.' },
+      { id:9,  type:'test',     required:true,  title:'ADD STAFF MEMBER',                          short:'Add Staff',
+        steps:["Go to the Manage Operations tab.",'Click + Add Staff Member.',"Fill out the form, including the staff member's username and password.",'Click Add Staff Member.'],
+        expected:'The staff member should be added successfully with their account ready to use.' },
+      { id:10, type:'test',     required:true,  title:'EDIT STAFF MEMBER',                         short:'Edit Staff',
+        steps:['Go to the Manage Operations tab.','Find the staff member you want to edit.','Update any information as needed.','Click Update Staff Member.'],
+        expected:"The staff member's information should be updated successfully." },
+      { id:11, type:'test',     required:true,  title:"CHANGE STAFF MEMBER'S ACCOUNT STATUS",      short:'Staff Status',
+        steps:['Go to the Manage Operations tab.','Find the staff member whose account you want to update.','Click the toggle button to change the account status from Active to Inactive (or vice versa).'],
+        expected:"The staff member's account status should update successfully." },
+      { id:12, type:'test',     required:true,  title:'ADD PATIENT',                               short:'Add Patient',
+        steps:['Go to the APE tab.','Click + Add Patient.','Fill out the required information in the form.','Click Add Patient.'],
+        expected:'The patient should be added successfully and appear in the patient list.' },
+      { id:13, type:'test',     required:true,  title:'PATIENT TESTS AND STATUS',                  short:'Patient Status',
+        steps:['Go to the APE tab.','Find the patient you want to update.','Change the patient status (e.g., Not Arrived, Arrived, Completed).','Use the toggle buttons to mark each test as completed or not completed.'],
+        expected:"The patient's status and test progress should update correctly, showing the current state for each patient and test." },
+      { id:14, type:'test',     required:true,  title:'ASSIGN PATIENT TO DOCTOR/PHYSICIAN',        short:'Assign Doctor',
+        steps:['Go to the APE tab.','Find the patient you want to update.','Click the vertical three-dot (⋮) button next to the patient.','Select Assign Doctor.','Search for or choose the doctor to assign.','Click Assign.'],
+        expected:"The patient should be successfully assigned to the selected doctor, and the assignment should appear in the patient's record." },
+      { id:15, type:'test',     required:true,  title:'ADD RECORDS TO PATIENTS',                   short:'Patient Records',
+        steps:['Go to the APE tab.','Find the patient you want to update.','Click the vertical three-dot (⋮) button next to the patient.','Select Add Records.','Update or fill out any fields as needed.','Click Save Form.'],
+        expected:"The patient's records should be saved successfully and updated in their profile." },
+      { id:16, type:'textarea', required:false, title:'DID YOU ENCOUNTER ANY OTHER ISSUES?',        hint:'Please specify which feature is failing or has a problem.' },
+      { id:17, type:'file',     required:false, title:'ATTACH SCREENSHOT (IF AVAILABLE)' },
+      { id:18, type:'textarea', required:false, title:'SUGGESTIONS FOR IMPROVEMENT',                hint:'Please share any recommendations to improve the system.' },
+      { id:19, type:'final',    required:true,  title:'FINAL ACCEPTANCE',                           hint:'Based on your testing, do you approve this system for deployment?' },
+      { id:20, type:'textarea', required:false, title:'ADDITIONAL COMMENTS' }
+    ];
+
+    const operationsQuestions = [
+      { id:1,  type:'text',     required:true,  title:'FULL NAME' },
+      { id:2,  type:'test',     required:true,  title:'LOGIN & AUTHENTICATION',                    short:'Login & Auth',
+        steps:['Go to https://ape.onehealthnetwork.com.ph','Enter your username and password.','Click Log In.'],
+        expected:'You will be redirected to the Dashboard screen after logging in successfully.' },
+      { id:3,  type:'test',     required:true,  title:'EDIT PROFILE',                              short:'Edit Profile',
+        steps:['Click your name at the top right corner and click View Profile.','Update the information you want to change (such as your personal details, profile photo, e-signature, or password).','Click Save.'],
+        expected:'Your changes will be saved successfully.' },
+      { id:4,  type:'test',     required:true,  title:'SEARCH & FILTER PATIENTS',                  short:'Search Patients',
+        steps:['Use the Patient List Filters or the Search Bar to find patients based on name, company, status, year, or date.'],
+        expected:'The patient list should update automatically and display only the patients that match your selected filters or search.' },
+      { id:5,  type:'test',     required:true,  title:'PATIENT TEST STATUS',                       short:'Test Status',
+        steps:['Use the toggle buttons to mark each test as completed or not completed.'],
+        expected:"The patient's test progress should update correctly, showing the current state for each patient and test." },
+      { id:6,  type:'textarea', required:false, title:'DID YOU ENCOUNTER ANY OTHER ISSUES?',        hint:'Please specify which feature is failing or has a problem.' },
+      { id:7,  type:'file',     required:false, title:'ATTACH SCREENSHOT (IF AVAILABLE)' },
+      { id:8,  type:'textarea', required:false, title:'SUGGESTIONS FOR IMPROVEMENT',                hint:'Please share any recommendations to improve the system.' },
+      { id:9,  type:'final',    required:true,  title:'FINAL ACCEPTANCE',                           hint:'Based on your testing, do you approve this system for deployment?' },
+      { id:10, type:'textarea', required:false, title:'ADDITIONAL COMMENTS' }
+    ];
+
+    const doctorQuestions = [
+      { id:1,  type:'text',     required:true,  title:'FULL NAME' },
+      { id:2,  type:'test',     required:true,  title:'LOGIN & AUTHENTICATION',                    short:'Login & Auth',
+        steps:['Go to https://ape.onehealthnetwork.com.ph','Enter your username and password.','Click Log In.'],
+        expected:'You will be redirected to the Dashboard screen after logging in successfully.' },
+      { id:3,  type:'test',     required:true,  title:'EDIT PROFILE',                              short:'Edit Profile',
+        steps:['Click your name at the top right corner and click View Profile.','Update the information you want to change (such as your personal details, profile photo, e-signature, or password).','Click Save.'],
+        expected:'Your changes will be saved successfully.' },
+      { id:4,  type:'test',     required:true,  title:'ADD PATIENT',                               short:'Add Patient',
+        steps:['Waiting for an update.'],
+        expected:'' },
+      { id:5,  type:'test',     required:true,  title:'PATIENT TESTS',                             short:'Patient Tests',
+        steps:['Waiting for an update.'],
+        expected:"The patient's test progress should update correctly, and you should only be able to edit the columns that your role allows." },
+      { id:6,  type:'textarea', required:false, title:'DID YOU ENCOUNTER ANY OTHER ISSUES?',        hint:'Please specify which feature is failing or has a problem.' },
+      { id:7,  type:'file',     required:false, title:'ATTACH SCREENSHOT (IF AVAILABLE)' },
+      { id:8,  type:'textarea', required:false, title:'SUGGESTIONS FOR IMPROVEMENT',                hint:'Please share any recommendations to improve the system.' },
+      { id:9,  type:'final',    required:true,  title:'FINAL ACCEPTANCE',                           hint:'Based on your testing, do you approve this system for deployment?' },
+      { id:10, type:'textarea', required:false, title:'ADDITIONAL COMMENTS' }
+    ];
+
     // ─────────────────────────────────────────────
     // VIEW MANAGEMENT
     // ─────────────────────────────────────────────
+    const ROLE_META = {
+      sales:       { label: 'Sales Team',           banner: 'Sales Team UAT Survey',            qs: () => salesQuestions       },
+      manager:     { label: 'Supervisor / Director', banner: 'Supervisor / Director UAT Survey', qs: () => managerQuestions     },
+      accounting:  { label: 'Finance & Accounting',  banner: 'Accounting UAT Survey',            qs: () => accountingQuestions  },
+      mobilehead:  { label: 'Mobile Head',           banner: 'Mobile Head UAT Survey',           qs: () => mobileHeadQuestions  },
+      operations:  { label: 'Operations Team',       banner: 'Operations UAT Survey',            qs: () => operationsQuestions  },
+      doctor:      { label: 'Assessing Physician',   banner: 'Doctor UAT Survey',                qs: () => doctorQuestions      }
+    };
+    const ROLE_CHIP_LABEL = {
+      sales: '📋 Sales', manager: '🧑‍💼 Manager', accounting: '🧾 Accounting',
+      mobilehead: '👨🏻‍💻 Mobile Head', operations: '⚙️ Operations', doctor: '🩺 Doctor'
+    };
+    const ROLE_DISPLAY = {
+      sales: 'Sales', manager: 'Manager', accounting: 'Accounting',
+      mobilehead: 'Mobile Head', operations: 'Operations', doctor: 'Doctor'
+    };
+
+    function getQuestions(role) { return ROLE_META[role]?.qs() || []; }
+
     let currentRole = null;
     let unsubscribeAnalytics = null;
     const chartInstances = {};
@@ -797,9 +1142,9 @@
 
     function openForm(role) {
       currentRole = role;
-      const qs = role === 'sales' ? salesQuestions : managerQuestions;
-      document.getElementById('form-role-label').textContent = role === 'sales' ? 'Sales Team' : 'Supervisor / Director';
-      renderForm(qs, role);
+      const meta = ROLE_META[role] || {};
+      document.getElementById('form-role-label').textContent = meta.label || role;
+      renderForm(getQuestions(role), role);
       showView('view-form');
     }
 
@@ -807,7 +1152,7 @@
     // FORM RENDERING
     // ─────────────────────────────────────────────
     function renderForm(questions, role) {
-      const banner = role === 'sales' ? 'Sales Team UAT Survey' : 'Supervisor / Director UAT Survey';
+      const banner = ROLE_META[role]?.banner || 'UAT Survey';
       let html = `
         <div class="form-banner">
           <div class="form-banner-title">${banner}</div>
@@ -877,7 +1222,7 @@
             <div class="q-steps-header">Steps to Execute</div>
             <div class="q-steps-body">${steps}</div>
           </div>
-          <div class="q-expected"><span class="q-expected-label">What should happen?</span>${escHtml(q.expected)}</div>
+          ${q.expected ? `<div class="q-expected"><span class="q-expected-label">What should happen?</span>${escHtml(q.expected)}</div>` : ''}
           <div class="q-radio-group">${radios}</div>
           <div class="q-hint" style="margin-top:.5rem;">Respondents can select up to 1</div>
         `;
@@ -945,7 +1290,7 @@
     // FORM SUBMISSION
     // ─────────────────────────────────────────────
     async function submitForm(role) {
-      const questions = role === 'sales' ? salesQuestions : managerQuestions;
+      const questions = getQuestions(role);
       let hasError = false;
       const answers = {};
 
@@ -1043,17 +1388,57 @@
     }
 
     // ─────────────────────────────────────────────
-    // ANALYTICS
+    // ANALYTICS — HELPERS
     // ─────────────────────────────────────────────
     let allResponses = [];
 
+    function calcStats(responses, questions) {
+      const testQs = questions.filter(q => q.type === 'test');
+      let totalPass = 0, totalFail = 0;
+      testQs.forEach(q => {
+        responses.forEach(r => {
+          const v = r.answers?.[q.id];
+          if (v === 'Pass') totalPass++;
+          else if (v === 'Fail') totalFail++;
+        });
+      });
+      const testTotal    = totalPass + totalFail;
+      const passRate     = testTotal > 0 ? Math.round(totalPass / testTotal * 100) : null;
+      const approved     = responses.filter(r => r.approved).length;
+      const notApproved  = responses.length - approved;
+      const approvalRate = responses.length > 0 ? Math.round(approved / responses.length * 100) : null;
+      return { totalPass, totalFail, testTotal, passRate, approved, notApproved, approvalRate };
+    }
+
+    function hClass(rate) {
+      if (rate === null) return 'na';
+      return rate >= 85 ? 'good' : rate >= 60 ? 'warn' : 'bad';
+    }
+
+    function hInfo(rate) {
+      if (rate === null) return { icon: '—', label: 'No Data' };
+      if (rate >= 85) return { icon: '🟢', label: 'Healthy' };
+      if (rate >= 60) return { icon: '🟡', label: 'Needs Attention' };
+      return { icon: '🔴', label: 'Critical' };
+    }
+
+    function hBannerMsg(passRate, failCount, testTotal) {
+      if (passRate === null) return { title: '— No Data Yet', sub: 'No test answers recorded yet.' };
+      if (passRate >= 85) return { title: '🟢 All Systems Passing', sub: `${passRate}% pass rate · ${failCount} failure${failCount !== 1 ? 's' : ''} out of ${testTotal} total test answers` };
+      if (passRate >= 60) return { title: '🟡 Some Scenarios Need Attention', sub: `${passRate}% pass rate · ${failCount} failure${failCount !== 1 ? 's' : ''} out of ${testTotal} total test answers` };
+      return { title: '🔴 Critical Issues Detected', sub: `${passRate}% pass rate · ${failCount} failure${failCount !== 1 ? 's' : ''} out of ${testTotal} total test answers` };
+    }
+
+    // ─────────────────────────────────────────────
+    // ANALYTICS — LOAD
+    // ─────────────────────────────────────────────
     function loadAnalytics() {
       showView('view-analytics');
       destroyCharts();
 
-      // Show loading spinners
-      ['sales','manager'].forEach(r => {
-        document.getElementById(`tab-content-${r}`).innerHTML = '<div class="analytics-loading"><div class="spinner"></div></div>';
+      ['general','sales','manager','accounting','mobilehead','operations','doctor'].forEach(t => {
+        const el = document.getElementById(`tab-content-${t}`);
+        if (el) el.innerHTML = '<div class="analytics-loading"><div class="spinner"></div></div>';
       });
 
       if (unsubscribeAnalytics) unsubscribeAnalytics();
@@ -1068,35 +1453,304 @@
             'Updated ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }, err => {
           console.error(err);
-          ['sales','manager'].forEach(r => {
-            document.getElementById(`tab-content-${r}`).innerHTML = `
+          ['general','sales','manager','accounting','mobilehead','operations','doctor'].forEach(t => {
+            const el = document.getElementById(`tab-content-${t}`);
+            if (el) el.innerHTML = `
               <div class="empty-state">
                 <div class="empty-state-icon">⚠️</div>
                 <div class="empty-state-title">Could not load data</div>
-                <div class="empty-state-sub">Check your Firestore security rules and internet connection.<br><small style="font-family:monospace;color:#ef4444">${err.message}</small></div>
+                <div class="empty-state-sub">Check Firestore security rules and internet connection.<br>
+                  <small style="font-family:monospace;color:#ef4444">${err.message}</small></div>
               </div>`;
           });
         });
     }
 
     function renderAnalytics(responses) {
-      const sales   = responses.filter(r => r.role === 'sales');
-      const manager = responses.filter(r => r.role === 'manager');
+      const sales       = responses.filter(r => r.role === 'sales');
+      const manager     = responses.filter(r => r.role === 'manager');
+      const accounting  = responses.filter(r => r.role === 'accounting');
+      const mobilehead  = responses.filter(r => r.role === 'mobilehead');
+      const operations  = responses.filter(r => r.role === 'operations');
+      const doctor      = responses.filter(r => r.role === 'doctor');
 
-      // Overview
-      const totalApproved = responses.filter(r => r.approved).length;
-      const approvalRate  = responses.length > 0 ? Math.round(totalApproved / responses.length * 100) : 0;
-      document.getElementById('ov-total').textContent   = responses.length;
-      document.getElementById('ov-sales').textContent   = sales.length;
-      document.getElementById('ov-manager').textContent = manager.length;
-      document.getElementById('ov-approval').textContent = approvalRate + '%';
+      const allRoleData = [
+        { rs: sales,      qs: salesQuestions      },
+        { rs: manager,    qs: managerQuestions     },
+        { rs: accounting, qs: accountingQuestions  },
+        { rs: mobilehead, qs: mobileHeadQuestions  },
+        { rs: operations, qs: operationsQuestions  },
+        { rs: doctor,     qs: doctorQuestions      }
+      ];
+      let totPass = 0, totFail = 0;
+      allRoleData.forEach(({ rs, qs }) => { const s = calcStats(rs, qs); totPass += s.totalPass; totFail += s.totalFail; });
+      const allTotal        = totPass + totFail;
+      const overallPassRate = allTotal > 0 ? Math.round(totPass / allTotal * 100) : null;
+      const rolesWithData   = allRoleData.filter(d => d.rs.length > 0).length;
+      const totalApproved   = responses.filter(r => r.approved).length;
+      const approvalRate    = responses.length > 0 ? Math.round(totalApproved / responses.length * 100) : null;
+
+      document.getElementById('ov-total').textContent    = responses.length;
+      document.getElementById('ov-pass').textContent     = overallPassRate !== null ? overallPassRate + '%' : '—';
+      document.getElementById('ov-roles').textContent    = `${rolesWithData}/6`;
+      document.getElementById('ov-approval').textContent = responses.length > 0 ? approvalRate + '%' : '—';
 
       destroyCharts();
-
-      renderRoleTab('sales',   sales,   salesQuestions);
-      renderRoleTab('manager', manager, managerQuestions);
+      renderGeneralTab(responses, sales, manager, accounting, mobilehead, operations, doctor);
+      renderRoleTab('sales',      sales,      salesQuestions);
+      renderRoleTab('manager',    manager,    managerQuestions);
+      renderRoleTab('accounting', accounting, accountingQuestions);
+      renderRoleTab('mobilehead', mobilehead, mobileHeadQuestions);
+      renderRoleTab('operations', operations, operationsQuestions);
+      renderRoleTab('doctor',     doctor,     doctorQuestions);
     }
 
+    // ─────────────────────────────────────────────
+    // ANALYTICS — GENERAL TAB
+    // ─────────────────────────────────────────────
+    function renderGeneralTab(responses, sales, manager, accounting, mobilehead, operations, doctor) {
+      const el = document.getElementById('tab-content-general');
+      if (!el) return;
+
+      if (responses.length === 0) {
+        el.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <div class="empty-state-title">No responses yet</div>
+            <div class="empty-state-sub">Survey submissions will appear here once recorded.</div>
+          </div>`;
+        return;
+      }
+
+      // Build role data array for uniform processing
+      const roleData = [
+        { key: 'sales',      label: '📋 Sales',        rs: sales,      qs: salesQuestions      },
+        { key: 'manager',    label: '🧑‍💼 Manager',     rs: manager,    qs: managerQuestions     },
+        { key: 'accounting', label: '🧾 Accounting',   rs: accounting, qs: accountingQuestions  },
+        { key: 'mobilehead', label: '👨🏻‍💻 Mobile Head', rs: mobilehead, qs: mobileHeadQuestions  },
+        { key: 'operations', label: '⚙️ Operations',   rs: operations, qs: operationsQuestions  },
+        { key: 'doctor',     label: '🩺 Doctor',        rs: doctor,     qs: doctorQuestions      }
+      ];
+      const roleStats = roleData.map(d => ({ ...d, stats: calcStats(d.rs, d.qs) }));
+      roleStats.forEach(d => { d.health = hInfo(d.stats.passRate); });
+
+      const combPass  = roleStats.reduce((a, d) => a + d.stats.totalPass, 0);
+      const combFail  = roleStats.reduce((a, d) => a + d.stats.totalFail, 0);
+      const combTotal = combPass + combFail;
+      const combRate  = combTotal > 0 ? Math.round(combPass / combTotal * 100) : null;
+      const combApproved     = responses.filter(r => r.approved).length;
+      const combApprovalRate = responses.length > 0 ? Math.round(combApproved / responses.length * 100) : null;
+
+      // Best / worst / at-risk roles (only roles that have data)
+      const rolesWithData = roleStats.filter(d => d.rs.length > 0 && d.stats.passRate !== null);
+      const bestRole  = rolesWithData.length ? rolesWithData.reduce((a, b) => b.stats.passRate > a.stats.passRate ? b : a) : null;
+      const worstRole = rolesWithData.length ? rolesWithData.reduce((a, b) => b.stats.passRate < a.stats.passRate ? b : a) : null;
+      const rolesAtRisk = rolesWithData.filter(d => d.stats.passRate < 85).length;
+
+      // Find failing features across all roles
+      const failingFeatures = [];
+      roleStats.forEach(({ key, label, rs, qs }) => {
+        if (!rs.length) return;
+        qs.filter(q => q.type === 'test').forEach(q => {
+          const p = rs.filter(r => r.answers?.[q.id] === 'Pass').length;
+          const f = rs.filter(r => r.answers?.[q.id] === 'Fail').length;
+          const tot = p + f;
+          if (tot === 0 || f === 0) return;
+          failingFeatures.push({ q, role: key, roleLabel: label, p, f, tot, rate: Math.round(p / tot * 100) });
+        });
+      });
+      failingFeatures.sort((a, b) => a.rate - b.rate);
+
+      // Collect feedback from all responses
+      const getFeedback = (field) => responses.map(r => {
+        const qs = getQuestions(r.role);
+        const q  = qs.find(x => x.type === 'textarea' && x.title.includes(field));
+        return { name: r.fullName, role: r.role, text: r.answers?.[q?.id] };
+      }).filter(x => x.text);
+
+      const allIssues      = getFeedback('OTHER ISSUES');
+      const allSuggestions = getFeedback('SUGGESTIONS');
+      const overallHealth  = hInfo(combRate);
+      const combRateCls    = combRate !== null ? (combRate >= 85 ? 'kpi-green' : combRate >= 60 ? 'kpi-yellow' : 'kpi-red') : '';
+
+      let html = `
+        <div class="gen-hero">
+          <div class="gen-hero-top">
+            <div>
+              <div class="gen-hero-title">UAT System Overview</div>
+              <div class="gen-hero-sub">${responses.length} response${responses.length !== 1 ? 's' : ''} recorded · ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>
+            </div>
+            <div class="gen-hero-status">
+              <span class="gen-hero-icon">${overallHealth.icon}</span>
+              <span class="gen-hero-status-text">${combRate !== null ? combRate + '% overall pass rate' : 'No test data'}</span>
+            </div>
+          </div>
+          <div class="gen-hero-badges">
+            ${roleStats.filter(d => d.rs.length > 0).map(d =>
+              `<div class="gen-hero-badge">${d.health.icon} ${ROLE_DISPLAY[d.key] || d.key}: ${d.stats.passRate !== null ? d.stats.passRate + '%' : 'No data'}</div>`
+            ).join('')}
+            <div class="gen-hero-badge">✅ ${combApprovalRate !== null ? combApprovalRate + '%' : '—'} approved</div>
+            <div class="gen-hero-badge">⚠️ ${failingFeatures.length} failing scenario${failingFeatures.length !== 1 ? 's' : ''}</div>
+          </div>
+        </div>
+
+        <div class="gen-kpi-grid">
+          <div class="gen-kpi-card">
+            <div class="gen-kpi-icon">🗳️</div>
+            <div class="gen-kpi-value">${responses.length}</div>
+            <div class="gen-kpi-label">Total Responses</div>
+            <div class="gen-kpi-sub">${roleStats.filter(d => d.rs.length > 0).map(d => `${ROLE_DISPLAY[d.key]}: ${d.rs.length}`).join(' · ')}</div>
+          </div>
+          <div class="gen-kpi-card ${combRateCls}">
+            <div class="gen-kpi-icon">${combRate === null ? '—' : combRate >= 85 ? '✅' : combRate >= 60 ? '⚠️' : '❌'}</div>
+            <div class="gen-kpi-value ${hClass(combRate)}">${combRate !== null ? combRate + '%' : '—'}</div>
+            <div class="gen-kpi-label">Overall Pass Rate</div>
+            <div class="gen-kpi-sub">${combPass} passed · ${combFail} failed</div>
+          </div>
+          <div class="gen-kpi-card ${bestRole ? (bestRole.stats.passRate >= 85 ? 'kpi-green' : bestRole.stats.passRate >= 60 ? 'kpi-yellow' : 'kpi-red') : ''}">
+            <div class="gen-kpi-icon">🏆</div>
+            <div class="gen-kpi-value ${bestRole ? hClass(bestRole.stats.passRate) : 'na'}">${bestRole ? bestRole.stats.passRate + '%' : '—'}</div>
+            <div class="gen-kpi-label">Best Performing Role</div>
+            <div class="gen-kpi-sub">${bestRole ? bestRole.label : 'No data yet'}</div>
+          </div>
+          <div class="gen-kpi-card ${rolesAtRisk > 0 ? (rolesAtRisk >= 3 ? 'kpi-red' : 'kpi-yellow') : (rolesWithData.length > 0 ? 'kpi-green' : '')}">
+            <div class="gen-kpi-icon">${rolesAtRisk > 0 ? '⚠️' : '✅'}</div>
+            <div class="gen-kpi-value ${rolesAtRisk > 0 ? (rolesAtRisk >= 3 ? 'bad' : 'warn') : 'good'}">${rolesAtRisk}</div>
+            <div class="gen-kpi-label">Roles Needing Attention</div>
+            <div class="gen-kpi-sub">${rolesAtRisk === 0 ? (rolesWithData.length > 0 ? 'All roles above 85%' : 'No data yet') : `${rolesAtRisk} role${rolesAtRisk !== 1 ? 's' : ''} below 85%`}</div>
+          </div>
+        </div>
+
+        <div class="gen-section-card">
+          <div class="gen-section-title">📊 Role Comparison</div>
+          <table class="gen-comp-table">
+            <thead>
+              <tr>
+                <th>Role</th><th>Responses</th><th>Pass Rate</th>
+                <th>Tests Passed</th><th>Approval Rate</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${roleStats.map(d => `
+              <tr>
+                <td class="gen-comp-role">${d.label}</td>
+                <td>${d.rs.length}</td>
+                <td><span class="gen-rate-badge ${hClass(d.stats.passRate)}">${d.stats.passRate !== null ? d.stats.passRate + '%' : '—'}</span></td>
+                <td>${d.stats.totalPass} / ${d.stats.testTotal}</td>
+                <td><span class="gen-rate-badge ${hClass(d.stats.approvalRate)}">${d.stats.approvalRate !== null ? d.stats.approvalRate + '%' : '—'}</span></td>
+                <td class="gen-status-label">${d.health.icon} ${d.health.label}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      if (failingFeatures.length > 0) {
+        html += `
+          <div class="gen-section-card">
+            <div class="gen-section-title">⚠️ Failing Scenarios (${failingFeatures.length})</div>
+            <div class="gen-section-sub">Scenarios where at least one tester reported a failure — sorted worst to best</div>
+            ${failingFeatures.map(f => `
+              <div class="gen-failing-row">
+                <div class="gen-failing-left">
+                  <span class="gen-role-chip ${f.role}">${f.roleLabel}</span>
+                  <span class="gen-failing-name">${f.q.short || f.q.title}</span>
+                </div>
+                <div class="gen-failing-bar-wrap">
+                  <div class="gen-failing-bar">
+                    <div class="gen-failing-bar-pass" style="width:${f.rate}%"></div>
+                    <div class="gen-failing-bar-fail" style="width:${100 - f.rate}%"></div>
+                  </div>
+                  <div class="gen-failing-counts">
+                    <span style="color:var(--pass)">✅ ${f.p} Pass</span>
+                    <span style="color:var(--fail)">❌ ${f.f} Fail</span>
+                  </div>
+                </div>
+                <div class="gen-failing-rate ${hClass(f.rate)}">${f.rate}%</div>
+              </div>`).join('')}
+          </div>`;
+      } else if (combTotal > 0) {
+        html += `
+          <div class="gen-section-card" style="text-align:center;padding:2.5rem 1rem;">
+            <div style="font-size:2.75rem;margin-bottom:.6rem;">🎉</div>
+            <div style="font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:.3rem;">All Scenarios Passing!</div>
+            <div style="font-size:.85rem;color:var(--muted);">No failures reported across all roles.</div>
+          </div>`;
+      }
+
+      if (allIssues.length > 0 || allSuggestions.length > 0) {
+        html += `<div class="gen-section-card"><div class="gen-section-title">💬 Respondent Feedback</div>`;
+        if (allIssues.length > 0) {
+          html += `<div style="margin-top:.85rem">
+            <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:.65rem">🐛 Issues Reported (${allIssues.length})</div>
+            ${allIssues.map(i => `
+              <div class="gen-feedback-item">
+                <div class="gen-feedback-meta">
+                  <span class="gen-feedback-name">${escHtml(i.name || 'Unknown')}</span>
+                  <span class="gen-role-chip ${i.role}">${ROLE_CHIP_LABEL[i.role] || i.role}</span>
+                </div>
+                <div class="gen-feedback-text">${escHtml(i.text)}</div>
+              </div>`).join('')}
+          </div>`;
+        }
+        if (allSuggestions.length > 0) {
+          html += `<div style="margin-top:${allIssues.length ? '1.25rem' : '.85rem'}">
+            <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:.65rem">💡 Suggestions (${allSuggestions.length})</div>
+            ${allSuggestions.map(i => `
+              <div class="gen-feedback-item">
+                <div class="gen-feedback-meta">
+                  <span class="gen-feedback-name">${escHtml(i.name || 'Unknown')}</span>
+                  <span class="gen-role-chip ${i.role}">${ROLE_CHIP_LABEL[i.role] || i.role}</span>
+                </div>
+                <div class="gen-feedback-text">${escHtml(i.text)}</div>
+              </div>`).join('')}
+          </div>`;
+        }
+        html += `</div>`;
+      }
+
+      // ── All Submissions list ──
+      html += `
+        <div class="all-resp-card">
+          <div class="all-resp-header">
+            <span class="all-resp-title">🗂️ All Submissions</span>
+            <span class="all-resp-count">${responses.length} total</span>
+          </div>
+          ${responses.length === 0
+            ? '<div style="padding:2rem;text-align:center;color:var(--muted);font-size:.85rem">No submissions yet.</div>'
+            : responses.map(r => {
+                const ts      = r.submittedAt?.toDate ? r.submittedAt.toDate() : null;
+                const dateStr = ts
+                  ? ts.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})
+                    + ' · ' + ts.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})
+                  : 'Pending…';
+                return `
+                  <div class="all-resp-row" id="all-resp-row-${r.id}">
+                    <span class="gen-role-chip ${r.role}" style="flex-shrink:0">${ROLE_CHIP_LABEL[r.role] || r.role}</span>
+                    <div class="all-resp-info">
+                      <span class="all-resp-name">${escHtml(r.fullName || 'Unknown')}</span>
+                      <span class="all-resp-date">🕐 ${dateStr}</span>
+                    </div>
+                    <span class="all-resp-approval ${r.approved ? 'yes' : 'no'}">${r.approved ? '✅ Approved' : '❌ Not Approved'}</span>
+                    <div class="all-resp-del-wrap">
+                      <button class="all-resp-del-btn" id="del-btn-${r.id}" onclick="showDeleteConfirm('${r.id}')">🗑️ Delete</button>
+                      <div class="all-resp-confirm" id="del-confirm-${r.id}">
+                        <span class="all-resp-confirm-label">Delete?</span>
+                        <button class="all-resp-confirm-yes" onclick="confirmDelete('${r.id}')">Yes, Delete</button>
+                        <button class="all-resp-confirm-cancel" onclick="cancelDelete('${r.id}')">Cancel</button>
+                      </div>
+                    </div>
+                  </div>`;
+              }).join('')
+          }
+        </div>`;
+
+      el.innerHTML = html;
+    }
+
+    // ─────────────────────────────────────────────
+    // ANALYTICS — ROLE TAB
+    // ─────────────────────────────────────────────
     function renderRoleTab(role, responses, questions) {
       const el = document.getElementById(`tab-content-${role}`);
 
@@ -1110,49 +1764,38 @@
         return;
       }
 
-      const testQs    = questions.filter(q => q.type === 'test');
-      const finalQ    = questions.find(q => q.type === 'final');
-      const issuesQ   = questions.find(q => q.type === 'textarea' && q.title.includes('OTHER ISSUES'));
-      const suggestQ  = questions.find(q => q.type === 'textarea' && q.title.includes('SUGGESTIONS'));
-      const commentQ  = questions.find(q => q.type === 'textarea' && q.title.includes('COMMENTS'));
-      const fileQ     = questions.find(q => q.type === 'file');
+      const stats    = calcStats(responses, questions);
+      const testQs   = questions.filter(q => q.type === 'test');
+      const issuesQ  = questions.find(q => q.type === 'textarea' && q.title.includes('OTHER ISSUES'));
+      const suggestQ = questions.find(q => q.type === 'textarea' && q.title.includes('SUGGESTIONS'));
+      const commentQ = questions.find(q => q.type === 'textarea' && q.title.includes('COMMENTS'));
+      const fileQ    = questions.find(q => q.type === 'file');
 
-      // Calc overall test stats
-      let totalPass = 0, totalFail = 0, totalNA = 0;
-      testQs.forEach(q => {
-        responses.forEach(r => {
-          const v = r.answers?.[q.id];
-          if (v === 'Pass') totalPass++;
-          else if (v === 'Fail') totalFail++;
-          else if (v === 'N/A') totalNA++;
-        });
-      });
-      const testTotal    = totalPass + totalFail + totalNA;
-      const overallPass  = testTotal > 0 ? Math.round(totalPass / testTotal * 100) : 0;
+      const bannerInfo = hBannerMsg(stats.passRate, stats.totalFail, stats.testTotal);
+      const bannerCls  = stats.passRate === null ? 'na' : stats.passRate >= 85 ? 'good' : stats.passRate >= 60 ? 'warn' : 'bad';
 
-      // Calc approval
-      const approved     = responses.filter(r => r.approved).length;
-      const notApproved  = responses.length - approved;
-      const approvalRate = responses.length > 0 ? Math.round(approved / responses.length * 100) : 0;
+      const statAccent = (rate) => rate === null ? 'accent-blue' : rate >= 85 ? 'accent-green' : rate >= 60 ? 'accent-yellow' : 'accent-red';
 
-      // Average pass rate per question
       let html = `
-        <div class="role-header">
-          <span class="role-title">${role === 'sales' ? '📋 Sales' : '🧑‍💼 Manager'} Analytics</span>
-          <span class="role-badge">${responses.length} Response${responses.length !== 1 ? 's' : ''}</span>
+        <div class="role-health-banner ${bannerCls}">
+          <div class="role-health-icon">${bannerCls === 'good' ? '🟢' : bannerCls === 'warn' ? '🟡' : bannerCls === 'bad' ? '🔴' : '—'}</div>
+          <div class="role-health-text">
+            <div class="role-health-title">${bannerInfo.title}</div>
+            <div class="role-health-sub">${bannerInfo.sub}</div>
+          </div>
         </div>
 
         <div class="mini-stats">
-          <div class="mini-stat">
-            <div class="mini-stat-val blue">${responses.length}</div>
+          <div class="mini-stat accent-blue">
+            <div class="mini-stat-val">${responses.length}</div>
             <div class="mini-stat-label">Total Responses</div>
           </div>
-          <div class="mini-stat">
-            <div class="mini-stat-val ${overallPass >= 80 ? 'green' : overallPass >= 50 ? '' : 'red'}">${overallPass}%</div>
+          <div class="mini-stat ${statAccent(stats.passRate)}">
+            <div class="mini-stat-val ${hClass(stats.passRate)}">${stats.passRate !== null ? stats.passRate + '%' : '—'}</div>
             <div class="mini-stat-label">Overall Pass Rate</div>
           </div>
-          <div class="mini-stat">
-            <div class="mini-stat-val ${approvalRate >= 80 ? 'green' : approvalRate >= 50 ? '' : 'red'}">${approvalRate}%</div>
+          <div class="mini-stat ${statAccent(stats.approvalRate)}">
+            <div class="mini-stat-val ${hClass(stats.approvalRate)}">${stats.approvalRate !== null ? stats.approvalRate + '%' : '—'}</div>
             <div class="mini-stat-label">Approval Rate</div>
           </div>
         </div>
@@ -1160,29 +1803,34 @@
         <div class="charts-row">
           <div class="chart-card">
             <div class="chart-card-title">Overall Test Results</div>
-            <div class="chart-canvas-wrap">
-              <canvas id="chart-test-${role}" height="220"></canvas>
+            <div class="chart-canvas-wrap"><canvas id="chart-test-${role}" height="200"></canvas></div>
+            <div class="chart-legend-custom">
+              <span class="clc clc-pass">✅ ${stats.totalPass} Pass</span>
+              <span class="clc clc-fail">❌ ${stats.totalFail} Fail</span>
             </div>
           </div>
           <div class="chart-card">
             <div class="chart-card-title">Final Acceptance</div>
-            <div class="chart-canvas-wrap">
-              <canvas id="chart-approval-${role}" height="220"></canvas>
+            <div class="chart-canvas-wrap"><canvas id="chart-approval-${role}" height="200"></canvas></div>
+            <div class="chart-legend-custom">
+              <span class="clc clc-pass">✅ ${stats.approved} Approved</span>
+              <span class="clc clc-fail">❌ ${stats.notApproved} Not Approved</span>
             </div>
           </div>
         </div>
 
         <div class="breakdown-card">
-          <div class="breakdown-title">Test Scenario Results — per question</div>
+          <div class="breakdown-header">
+            <div class="breakdown-title">Test Scenario Results</div>
+            <div class="breakdown-legend"><span class="bl-pass">✅ Pass</span><span class="bl-fail">❌ Fail</span></div>
+          </div>
           ${testQs.map(q => {
-            const p = responses.filter(r => r.answers?.[q.id] === 'Pass').length;
-            const f = responses.filter(r => r.answers?.[q.id] === 'Fail').length;
-            const n = responses.filter(r => r.answers?.[q.id] === 'N/A').length;
-            const tot = p + f + n;
-            const pp = tot > 0 ? Math.round(p/tot*100) : 0;
-            const fp = tot > 0 ? Math.round(f/tot*100) : 0;
-            const np = Math.max(0, 100 - pp - fp);
-            const rateClass = pp >= 80 ? 'good' : pp >= 50 ? 'warn' : tot === 0 ? 'na' : 'bad';
+            const p   = responses.filter(r => r.answers?.[q.id] === 'Pass').length;
+            const f   = responses.filter(r => r.answers?.[q.id] === 'Fail').length;
+            const tot = p + f;
+            const pp  = tot > 0 ? Math.round(p / tot * 100) : 0;
+            const fp  = tot > 0 ? Math.round(f / tot * 100) : 0;
+            const rc  = pp >= 85 ? 'good' : pp >= 60 ? 'warn' : tot === 0 ? 'na' : 'bad';
             return `
               <div class="qa-row">
                 <div class="qa-label">
@@ -1193,103 +1841,114 @@
                   <div class="qa-bar">
                     <div class="qa-bar-pass" style="width:${pp}%"></div>
                     <div class="qa-bar-fail" style="width:${fp}%"></div>
-                    <div class="qa-bar-na"   style="width:${np}%"></div>
                   </div>
                   <div class="qa-bar-counts">
                     <span class="p">✅ ${p} Pass</span>
                     <span class="f">❌ ${f} Fail</span>
-                    <span class="n">— ${n} N/A</span>
+                    ${tot === 0 ? '<span style="color:var(--muted);font-size:.68rem">No answers yet</span>' : ''}
                   </div>
                 </div>
-                <div class="qa-rate ${rateClass}">${tot === 0 ? '—' : pp + '%'}</div>
+                <div class="qa-rate ${rc}">${tot === 0 ? '—' : pp + '%'}</div>
               </div>`;
           }).join('')}
         </div>
       `;
 
-      // Open text responses
-      const issuesList = responses.filter(r => r.answers?.[issuesQ?.id]).map(r =>
-        `<div class="text-response-item">
-          <span class="text-response-name">${escHtml(r.fullName || 'Unknown')}</span>
-          <span class="text-response-text">${escHtml(r.answers[issuesQ.id])}</span>
-        </div>`).join('') || '<div class="text-empty">No issues reported.</div>';
-
-      const suggestList = responses.filter(r => r.answers?.[suggestQ?.id]).map(r =>
-        `<div class="text-response-item">
-          <span class="text-response-name">${escHtml(r.fullName || 'Unknown')}</span>
-          <span class="text-response-text">${escHtml(r.answers[suggestQ.id])}</span>
-        </div>`).join('') || '<div class="text-empty">No suggestions provided.</div>';
-
-      const commentList = responses.filter(r => r.answers?.[commentQ?.id]).map(r =>
-        `<div class="text-response-item">
-          <span class="text-response-name">${escHtml(r.fullName || 'Unknown')}</span>
-          <span class="text-response-text">${escHtml(r.answers[commentQ.id])}</span>
-        </div>`).join('') || '<div class="text-empty">No additional comments.</div>';
-
-      // Screenshots
+      // Grouped feedback
+      const issuesList  = responses.filter(r => r.answers?.[issuesQ?.id]);
+      const suggestList = responses.filter(r => r.answers?.[suggestQ?.id]);
+      const commentList = responses.filter(r => r.answers?.[commentQ?.id]);
       const screenshots = responses.filter(r => r.answers?.[fileQ?.id]);
-      const screenshotsHtml = screenshots.length > 0
-        ? `<div class="text-responses-card">
-            <div class="text-section-title">📸 Attached Screenshots (${screenshots.length})</div>
-            <div style="display:flex;flex-wrap:wrap;gap:.65rem;margin-top:.5rem;">
+
+      if (issuesList.length || suggestList.length || commentList.length || screenshots.length) {
+        html += `<div class="text-responses-card"><div class="text-section-title">💬 Respondent Feedback</div>`;
+
+        if (issuesList.length) {
+          html += `<div class="feedback-group">
+            <div class="feedback-group-label">⚠️ Issues Reported (${issuesList.length})</div>
+            ${issuesList.map(r => `
+              <div class="text-response-item">
+                <span class="text-response-name">${escHtml(r.fullName || 'Unknown')}</span>
+                <span class="text-response-text">${escHtml(r.answers[issuesQ.id])}</span>
+              </div>`).join('')}
+          </div>`;
+        }
+        if (suggestList.length) {
+          html += `<div class="feedback-group">
+            <div class="feedback-group-label">💡 Suggestions (${suggestList.length})</div>
+            ${suggestList.map(r => `
+              <div class="text-response-item">
+                <span class="text-response-name">${escHtml(r.fullName || 'Unknown')}</span>
+                <span class="text-response-text">${escHtml(r.answers[suggestQ.id])}</span>
+              </div>`).join('')}
+          </div>`;
+        }
+        if (commentList.length) {
+          html += `<div class="feedback-group">
+            <div class="feedback-group-label">💬 Additional Comments (${commentList.length})</div>
+            ${commentList.map(r => `
+              <div class="text-response-item">
+                <span class="text-response-name">${escHtml(r.fullName || 'Unknown')}</span>
+                <span class="text-response-text">${escHtml(r.answers[commentQ.id])}</span>
+              </div>`).join('')}
+          </div>`;
+        }
+        if (screenshots.length) {
+          html += `<div class="feedback-group">
+            <div class="feedback-group-label">📸 Screenshots (${screenshots.length})</div>
+            <div class="screenshots-wrap">
               ${screenshots.map(r => `
-                <div style="text-align:center">
-                  <img class="screenshot-thumb" src="${r.answers[fileQ.id]}" alt="Screenshot by ${escHtml(r.fullName||'')}"
-                    onclick="openLightbox('${r.answers[fileQ.id]}')" title="${escHtml(r.fullName||'Unknown')}" />
-                  <div style="font-size:.65rem;color:var(--muted);margin-top:.25rem;">${escHtml(r.fullName||'Unknown')}</div>
+                <div class="screenshot-item">
+                  <img class="screenshot-thumb" src="${r.answers[fileQ.id]}" onclick="openLightbox('${r.answers[fileQ.id]}')" title="${escHtml(r.fullName||'')}" />
+                  <div class="screenshot-name">${escHtml(r.fullName||'Unknown')}</div>
                 </div>`).join('')}
             </div>
-          </div>` : '';
+          </div>`;
+        }
 
-      html += `
-        <div class="text-responses-card">
-          <div class="text-section-title">⚠️ Issues Reported (${responses.filter(r=>r.answers?.[issuesQ?.id]).length})</div>
-          ${issuesList}
-        </div>
-        <div class="text-responses-card">
-          <div class="text-section-title">💡 Suggestions for Improvement (${responses.filter(r=>r.answers?.[suggestQ?.id]).length})</div>
-          ${suggestList}
-        </div>
-        <div class="text-responses-card">
-          <div class="text-section-title">💬 Additional Comments (${responses.filter(r=>r.answers?.[commentQ?.id]).length})</div>
-          ${commentList}
-        </div>
-        ${screenshotsHtml}
-      `;
+        html += `</div>`;
+      }
 
-      // Individual responses
+      // Individual responses with dot grid
       html += `
         <div class="indiv-card">
           <div class="indiv-card-title">Individual Responses (${responses.length})</div>
           ${responses.map((r, idx) => {
-            const ts = r.submittedAt?.toDate ? r.submittedAt.toDate() : null;
-            const dateStr = ts ? ts.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' ' + ts.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) : 'Pending…';
-            const approvClass = r.approved ? 'yes' : 'no';
-            const approvTxt   = r.approved ? '✅ Approved' : '❌ Not Approved';
+            const ts      = r.submittedAt?.toDate ? r.submittedAt.toDate() : null;
+            const dateStr = ts
+              ? ts.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' · ' +
+                ts.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})
+              : 'Pending…';
+            const dotGrid = testQs.map(q => {
+              const v = r.answers?.[q.id];
+              return `<span title="Q${q.id}: ${q.short || q.title} — ${v || 'No answer'}" style="font-size:.78rem;line-height:1;cursor:default">${v === 'Pass' ? '🟢' : v === 'Fail' ? '🔴' : '⬜'}</span>`;
+            }).join('');
             const testAnswers = testQs.map(q => {
               const v = r.answers?.[q.id] || '—';
-              const cls = v === 'Pass' ? 'pass' : v === 'Fail' ? 'fail' : 'na';
               return `<div class="indiv-answer">
                 <div class="indiv-answer-q">Q${q.id}</div>
-                <div class="indiv-answer-v ${cls}">${v}</div>
+                <div class="indiv-answer-v ${v === 'Pass' ? 'pass' : v === 'Fail' ? 'fail' : 'na'}">${v}</div>
               </div>`;
             }).join('');
-            const extraAnswers = [issuesQ, suggestQ, commentQ].filter(Boolean).map(q => {
-              const v = r.answers?.[q.id];
-              if (!v) return '';
-              return `<div style="margin-top:.5rem;font-size:.8rem;"><strong style="color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;">${q.title.replace('DID YOU ENCOUNTER ANY OTHER ISSUES?','Issues').replace('SUGGESTIONS FOR IMPROVEMENT','Suggestions').replace('ADDITIONAL COMMENTS','Comments')}</strong><br>${escHtml(v)}</div>`;
+            const extra = [issuesQ, suggestQ, commentQ].filter(Boolean).map(q => {
+              const v = r.answers?.[q.id]; if (!v) return '';
+              const lbl = q.title.includes('OTHER ISSUES') ? 'Issues' : q.title.includes('SUGGESTIONS') ? 'Suggestions' : 'Comments';
+              return `<div style="margin-top:.5rem;font-size:.8rem;line-height:1.5"><strong style="color:var(--muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.07em">${lbl}</strong><br>${escHtml(v)}</div>`;
             }).join('');
             return `
               <div class="indiv-row" id="indiv-${role}-${idx}">
                 <div class="indiv-row-header" onclick="toggleIndiv('${role}-${idx}')">
-                  <span class="indiv-name">${escHtml(r.fullName || 'Unknown')}</span>
-                  <span class="indiv-date">${dateStr}</span>
-                  <span class="indiv-approval ${approvClass}">${approvTxt}</span>
+                  <div class="indiv-header-left">
+                    <span class="indiv-name">${escHtml(r.fullName || 'Unknown')}</span>
+                    <span class="indiv-date">${dateStr}</span>
+                  </div>
+                  <div class="indiv-dot-grid" title="Q-by-Q: 🟢=Pass 🔴=Fail">${dotGrid}</div>
+                  <span class="indiv-approval ${r.approved ? 'yes' : 'no'}">${r.approved ? '✅ Approved' : '❌ Not Approved'}</span>
                   <span class="indiv-toggle">▼</span>
                 </div>
                 <div class="indiv-details">
                   <div class="indiv-answers-grid">${testAnswers}</div>
-                  ${extraAnswers}
+                  ${extra}
                   ${r.answers?.[fileQ?.id] ? `<div style="margin-top:.65rem"><img class="screenshot-thumb" src="${r.answers[fileQ.id]}" onclick="openLightbox('${r.answers[fileQ.id]}')" /></div>` : ''}
                 </div>
               </div>`;
@@ -1299,27 +1958,15 @@
 
       el.innerHTML = html;
 
-      // Create Chart.js doughnuts after DOM is ready
       requestAnimationFrame(() => {
+        const doughnutOpts = { cutout: '70%', plugins: { legend: { display: false } }, responsive: true };
         chartInstances[`test-${role}`] = new Chart(
           document.getElementById(`chart-test-${role}`),
-          { type: 'doughnut',
-            data: {
-              labels: ['Pass', 'Fail', 'N/A'],
-              datasets: [{ data: [totalPass, totalFail, totalNA], backgroundColor: ['#22c55e','#ef4444','#94a3b8'], borderWidth: 0, hoverOffset: 6 }]
-            },
-            options: { cutout: '68%', plugins: { legend: { position:'bottom', labels:{ padding:14, font:{ size:12, family:"'DM Sans', sans-serif" } } } }, responsive: true }
-          }
+          { type: 'doughnut', data: { labels: ['Pass','Fail'], datasets: [{ data: [stats.totalPass, stats.totalFail], backgroundColor: ['#22c55e','#ef4444'], borderWidth: 0, hoverOffset: 6 }] }, options: doughnutOpts }
         );
         chartInstances[`approval-${role}`] = new Chart(
           document.getElementById(`chart-approval-${role}`),
-          { type: 'doughnut',
-            data: {
-              labels: ['Approved', 'Not Approved'],
-              datasets: [{ data: [approved, notApproved], backgroundColor: ['#22c55e','#ef4444'], borderWidth: 0, hoverOffset: 6 }]
-            },
-            options: { cutout: '68%', plugins: { legend: { position:'bottom', labels:{ padding:14, font:{ size:12, family:"'DM Sans', sans-serif" } } } }, responsive: true }
-          }
+          { type: 'doughnut', data: { labels: ['Approved','Not Approved'], datasets: [{ data: [stats.approved, stats.notApproved], backgroundColor: ['#22c55e','#ef4444'], borderWidth: 0, hoverOffset: 6 }] }, options: doughnutOpts }
         );
       });
     }
@@ -1341,7 +1988,30 @@
       if (row) row.classList.toggle('open');
     }
 
-    // Lightbox
+    // ─────────────────────────────────────────────
+    // DELETE RESPONSE
+    // ─────────────────────────────────────────────
+    function showDeleteConfirm(docId) {
+      document.getElementById(`del-btn-${docId}`)?.style.setProperty('display','none');
+      document.getElementById(`del-confirm-${docId}`)?.classList.add('show');
+    }
+    function cancelDelete(docId) {
+      document.getElementById(`del-btn-${docId}`)?.style.removeProperty('display');
+      document.getElementById(`del-confirm-${docId}`)?.classList.remove('show');
+    }
+    async function confirmDelete(docId) {
+      const row = document.getElementById(`all-resp-row-${docId}`);
+      if (row) { row.style.opacity = '0.35'; row.style.pointerEvents = 'none'; }
+      try {
+        await db.collection('surveys').doc(docId).delete();
+        // onSnapshot re-renders automatically — no manual DOM removal needed
+      } catch (err) {
+        if (row) { row.style.opacity = ''; row.style.pointerEvents = ''; }
+        cancelDelete(docId);
+        alert('Could not delete: ' + err.message);
+      }
+    }
+
     function openLightbox(url) {
       document.getElementById('lightbox-img').src = url;
       document.getElementById('lightbox').classList.add('open');

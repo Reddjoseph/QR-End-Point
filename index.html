@@ -3,8 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Select Your Role — One Health Network</title>
+  <title>UAT Portal — One Health Network</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -17,8 +21,11 @@
       --blue-mid: #bfdbfe;
       --text: #0d1b3e;
       --muted: #3d5a99;
-      --shadow: 0 4px 20px rgba(26, 86, 219, 0.10);
-      --shadow-hover: 0 16px 48px rgba(26, 86, 219, 0.28);
+      --shadow: 0 4px 20px rgba(26,86,219,0.10);
+      --shadow-hover: 0 16px 48px rgba(26,86,219,0.28);
+      --pass: #22c55e; --pass-bg: #f0fdf4; --pass-border: #bbf7d0;
+      --fail: #ef4444; --fail-bg: #fef2f2; --fail-border: #fecaca;
+      --na: #94a3b8;  --na-bg: #f8fafc;  --na-border: #e2e8f0;
     }
 
     body {
@@ -31,732 +38,402 @@
       min-height: 100vh;
     }
 
-    /* ─── HOME VIEW ─────────────────────────────── */
+    /* ══════════════════════════════════════════════
+       HOME VIEW
+    ══════════════════════════════════════════════ */
     #view-home {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 3rem 1.5rem;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      min-height: 100vh; padding: 3rem 1.5rem;
     }
-
-    .wrapper {
-      width: 100%;
-      max-width: 760px;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 2.75rem;
-      animation: fadeUp 0.5s ease both;
-    }
-
+    .wrapper { width: 100%; max-width: 760px; }
+    .header { text-align: center; margin-bottom: 2.75rem; animation: fadeUp 0.5s ease both; }
     .logo-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.55rem;
-      background: #ffffff;
-      border: 1.5px solid var(--blue-mid);
-      border-radius: 999px;
-      padding: 0.45rem 1.15rem;
-      margin-bottom: 1.4rem;
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      background: #fff; border: 1.5px solid var(--blue-mid); border-radius: 999px;
+      padding: 0.45rem 1.15rem; margin-bottom: 1.4rem;
       box-shadow: 0 2px 12px rgba(26,86,219,0.10);
     }
-
-    .logo-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--blue);
-    }
-
-    .logo-text {
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--blue);
-    }
-
-    h1 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(3rem, 9vw, 5rem);
-      line-height: 1;
-      letter-spacing: 0.03em;
-      color: var(--text);
-    }
-
+    .logo-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--blue); }
+    .logo-text { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue); }
+    h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 9vw, 5rem); line-height: 1; letter-spacing: 0.03em; color: var(--text); }
     h1 span { color: var(--blue); }
+    .subtitle { margin-top: 0.75rem; font-size: 1rem; color: var(--muted); }
 
-    .subtitle {
-      margin-top: 0.75rem;
-      font-size: 1rem;
-      color: var(--muted);
-      font-weight: 400;
-    }
-
-    /* ── CARD GRID ── */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.1rem;
-    }
-
-    @media (max-width: 600px) {
-      .grid { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    @media (max-width: 380px) {
-      .grid { grid-template-columns: 1fr; }
-    }
+    /* Card Grid */
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; }
+    @media (max-width: 600px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 380px) { .grid { grid-template-columns: 1fr; } }
 
     .card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      padding: 2.25rem 1.25rem 1.75rem;
-      background: var(--surface);
-      border: 2px solid var(--blue-mid);
-      border-radius: 20px;
-      text-decoration: none;
-      color: var(--text);
-      box-shadow: var(--shadow);
-      cursor: pointer;
-      transition: background 0.22s, border-color 0.22s, box-shadow 0.22s, transform 0.18s;
-      animation: fadeUp 0.55s ease both;
-      text-align: center;
-      position: relative;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 1rem; padding: 2.25rem 1.25rem 1.75rem;
+      background: var(--surface); border: 2px solid var(--blue-mid); border-radius: 20px;
+      text-decoration: none; color: var(--text); box-shadow: var(--shadow);
+      cursor: pointer; transition: background 0.22s, border-color 0.22s, box-shadow 0.22s, transform 0.18s;
+      animation: fadeUp 0.55s ease both; text-align: center; position: relative;
     }
-
-    .card:nth-child(1) { animation-delay: 0.06s; }
-    .card:nth-child(2) { animation-delay: 0.12s; }
-    .card:nth-child(3) { animation-delay: 0.18s; }
-    .card:nth-child(4) { animation-delay: 0.24s; }
-    .card:nth-child(5) { animation-delay: 0.30s; }
-    .card:nth-child(6) { animation-delay: 0.36s; }
-
-    .card:not(.card--disabled):hover {
-      background: var(--blue);
-      border-color: var(--blue-dark);
-      box-shadow: var(--shadow-hover);
-      transform: translateY(-6px);
-    }
-
-    .card:not(.card--disabled):active {
-      transform: translateY(-2px) scale(0.98);
-    }
-
-    /* Disabled card */
-    .card--disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-      filter: grayscale(0.3);
-    }
-
-    .card--disabled .card-arrow {
-      display: none;
-    }
-
+    .card:nth-child(1){animation-delay:.06s} .card:nth-child(2){animation-delay:.12s}
+    .card:nth-child(3){animation-delay:.18s} .card:nth-child(4){animation-delay:.24s}
+    .card:nth-child(5){animation-delay:.30s} .card:nth-child(6){animation-delay:.36s}
+    .card:not(.card--disabled):hover { background: var(--blue); border-color: var(--blue-dark); box-shadow: var(--shadow-hover); transform: translateY(-6px); }
+    .card:not(.card--disabled):active { transform: translateY(-2px) scale(0.98); }
+    .card--disabled { opacity: 0.42; cursor: not-allowed; filter: grayscale(0.25); }
+    .card--disabled .card-arrow { display: none; }
     .card--disabled::after {
-      content: 'Coming Soon';
-      position: absolute;
-      top: 0.6rem;
-      right: 0.7rem;
-      font-size: 0.58rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      background: #e2e8f0;
-      color: #64748b;
-      border-radius: 999px;
-      padding: 0.2rem 0.55rem;
+      content: 'Coming Soon'; position: absolute; top: 0.6rem; right: 0.7rem;
+      font-size: 0.58rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      background: #e2e8f0; color: #64748b; border-radius: 999px; padding: 0.2rem 0.55rem;
     }
-
-    /* Icon circle */
     .card-icon {
-      width: 84px;
-      height: 84px;
-      border-radius: 50%;
-      background: var(--blue-light);
-      border: 2px solid var(--blue-mid);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.5rem;
-      flex-shrink: 0;
-      transition: background 0.22s, border-color 0.22s, transform 0.22s;
+      width: 84px; height: 84px; border-radius: 50%;
+      background: var(--blue-light); border: 2px solid var(--blue-mid);
+      display: flex; align-items: center; justify-content: center; font-size: 2.5rem;
+      flex-shrink: 0; transition: background 0.22s, border-color 0.22s, transform 0.22s;
     }
-
-    .card:not(.card--disabled):hover .card-icon {
-      background: var(--blue-dark);
-      border-color: rgba(255,255,255,0.2);
-      transform: scale(1.08);
-    }
-
-    .card-info {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.3rem;
-    }
-
-    .card-name {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1.25;
-      transition: color 0.22s;
-    }
-
-    .card:not(.card--disabled):hover .card-name { color: #ffffff; }
-
-    .card-tag {
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--blue);
-      transition: color 0.22s;
-    }
-
+    .card:not(.card--disabled):hover .card-icon { background: var(--blue-dark); border-color: rgba(255,255,255,0.2); transform: scale(1.08); }
+    .card-info { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; }
+    .card-name { font-size: 1rem; font-weight: 700; color: var(--text); line-height: 1.25; transition: color 0.22s; }
+    .card:not(.card--disabled):hover .card-name { color: #fff; }
+    .card-tag { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue); transition: color 0.22s; }
     .card:not(.card--disabled):hover .card-tag { color: rgba(255,255,255,0.72); }
-
     .card-arrow {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: var(--blue-light);
-      border: 1.5px solid var(--blue-mid);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.95rem;
-      color: var(--blue);
-      margin-top: 0.15rem;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--blue-light); border: 1.5px solid var(--blue-mid);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem; color: var(--blue); margin-top: 0.15rem;
       transition: background 0.22s, color 0.22s, border-color 0.22s, transform 0.22s;
     }
+    .card:not(.card--disabled):hover .card-arrow { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.32); color: #fff; transform: translateY(2px); }
 
-    .card:not(.card--disabled):hover .card-arrow {
-      background: rgba(255,255,255,0.18);
-      border-color: rgba(255,255,255,0.32);
-      color: #ffffff;
-      transform: translateY(2px);
+    /* Summary admin button */
+    .summary-btn-wrap { text-align: center; margin-top: 1.75rem; animation: fadeUp 0.55s 0.44s ease both; opacity: 0; animation-fill-mode: both; }
+    .summary-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(255,255,255,0.7); border: 1.5px solid var(--blue-mid);
+      border-radius: 999px; padding: 0.5rem 1.35rem;
+      font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600;
+      color: var(--muted); cursor: pointer;
+      transition: background 0.18s, border-color 0.18s, color 0.18s, box-shadow 0.18s;
+      backdrop-filter: blur(8px);
     }
+    .summary-btn:hover { background: #fff; border-color: var(--blue); color: var(--blue); box-shadow: 0 4px 16px rgba(26,86,219,0.14); }
+    .summary-btn-icon { font-size: 0.9rem; }
 
-    /* ── FOOTER ── */
-    .footer {
-      text-align: center;
-      margin-top: 2rem;
-      font-size: 0.78rem;
-      color: var(--muted);
-      letter-spacing: 0.05em;
-      animation: fadeUp 0.55s 0.42s ease both;
-      opacity: 0;
-      animation-fill-mode: both;
-    }
+    .footer { text-align: center; margin-top: 1.5rem; font-size: 0.78rem; color: var(--muted); letter-spacing: 0.05em; animation: fadeUp 0.55s 0.52s ease both; opacity: 0; animation-fill-mode: both; }
 
-    /* ─── FORM VIEW ─────────────────────────────── */
-    #view-form {
-      display: none;
-      min-height: 100vh;
-      padding: 0;
-    }
-
+    /* ══════════════════════════════════════════════
+       FORM VIEW
+    ══════════════════════════════════════════════ */
+    #view-form { display: none; min-height: 100vh; }
     .form-header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(255,255,255,0.96);
-      backdrop-filter: blur(12px);
-      border-bottom: 1.5px solid var(--blue-mid);
-      padding: 1rem 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.96); backdrop-filter: blur(12px);
+      border-bottom: 1.5px solid var(--blue-mid); padding: 1rem 1.5rem;
+      display: flex; align-items: center; gap: 1rem;
       box-shadow: 0 2px 16px rgba(26,86,219,0.07);
     }
-
     .form-back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      background: var(--blue-light);
-      border: 1.5px solid var(--blue-mid);
-      border-radius: 999px;
-      padding: 0.4rem 1rem;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--blue);
-      cursor: pointer;
-      transition: background 0.18s, border-color 0.18s, color 0.18s;
-      white-space: nowrap;
-      flex-shrink: 0;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--blue-light); border: 1.5px solid var(--blue-mid);
+      border-radius: 999px; padding: 0.4rem 1rem;
+      font-size: 0.82rem; font-weight: 600; color: var(--blue);
+      cursor: pointer; transition: background 0.18s, color 0.18s; white-space: nowrap; flex-shrink: 0;
     }
+    .form-back-btn:hover { background: var(--blue); border-color: var(--blue-dark); color: #fff; }
+    .form-header-role { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); display: block; }
+    .form-header-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.35rem; letter-spacing: 0.04em; color: var(--text); line-height: 1; display: block; }
+    .form-body { max-width: 740px; margin: 0 auto; padding: 2rem 1.5rem 4rem; display: flex; flex-direction: column; gap: 1.1rem; }
+    .form-banner { background: var(--blue); border-radius: 18px; padding: 2rem 2rem 1.75rem; color: #fff; }
+    .form-banner-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.04em; line-height: 1; margin-bottom: 0.5rem; }
+    .form-banner-sub { font-size: 0.88rem; opacity: 0.82; line-height: 1.5; }
 
-    .form-back-btn:hover {
-      background: var(--blue);
-      border-color: var(--blue-dark);
-      color: #fff;
-    }
-
-    .form-header-info {
-      display: flex;
-      flex-direction: column;
-      gap: 0.1rem;
-    }
-
-    .form-header-role {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--blue);
-    }
-
-    .form-header-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.35rem;
-      letter-spacing: 0.04em;
-      color: var(--text);
-      line-height: 1;
-    }
-
-    .form-body {
-      max-width: 740px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem 4rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.1rem;
-    }
-
-    /* Top banner card */
-    .form-banner {
-      background: var(--blue);
-      border-radius: 18px;
-      padding: 2rem 2rem 1.75rem;
-      color: #fff;
-    }
-
-    .form-banner-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 2rem;
-      letter-spacing: 0.04em;
-      line-height: 1;
-      margin-bottom: 0.5rem;
-    }
-
-    .form-banner-sub {
-      font-size: 0.88rem;
-      opacity: 0.82;
-      line-height: 1.5;
-    }
-
-    /* Question card */
-    .q-card {
-      background: var(--surface);
-      border: 1.5px solid var(--blue-mid);
-      border-radius: 16px;
-      padding: 1.5rem 1.75rem;
-      box-shadow: var(--shadow);
-      animation: fadeUp 0.4s ease both;
-    }
-
-    .q-card.required-error {
-      border-color: #ef4444;
-      box-shadow: 0 0 0 3px rgba(239,68,68,0.12);
-    }
-
-    .q-number {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--blue);
-      margin-bottom: 0.35rem;
-    }
-
-    .q-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 0.2rem;
-      line-height: 1.4;
-    }
-
-    .q-required-star {
-      color: #ef4444;
-      margin-left: 2px;
-    }
-
-    .q-optional-tag {
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #94a3b8;
-      margin-left: 0.4rem;
-    }
-
-    /* Steps block */
-    .q-steps-block {
-      margin: 0.85rem 0 0.5rem;
-      border: 1px solid var(--blue-mid);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .q-steps-header {
-      background: var(--blue-light);
-      padding: 0.45rem 0.85rem;
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--blue);
-    }
-
-    .q-steps-body {
-      padding: 0.75rem 0.85rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.45rem;
-    }
-
-    .q-step {
-      display: flex;
-      gap: 0.6rem;
-      font-size: 0.83rem;
-      color: var(--text);
-      line-height: 1.45;
-    }
-
-    .q-step-num {
-      min-width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--blue);
-      color: #fff;
-      font-size: 0.65rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .q-step-bullet {
-      min-width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--blue);
-      flex-shrink: 0;
-      margin-top: 7px;
-    }
-
-    .q-expected {
-      margin: 0.75rem 0 0;
-      padding: 0.65rem 0.85rem;
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
-      border-radius: 8px;
-      font-size: 0.82rem;
-      color: #166534;
-      line-height: 1.5;
-    }
-
-    .q-expected-label {
-      font-weight: 700;
-      display: block;
-      margin-bottom: 0.2rem;
-      font-size: 0.68rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    /* Radio group */
-    .q-radio-group {
-      margin-top: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.55rem;
-    }
-
+    /* Question cards */
+    .q-card { background: var(--surface); border: 1.5px solid var(--blue-mid); border-radius: 16px; padding: 1.5rem 1.75rem; box-shadow: var(--shadow); }
+    .q-card.required-error { border-color: var(--fail); box-shadow: 0 0 0 3px rgba(239,68,68,0.12); }
+    .q-number { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.35rem; }
+    .q-title { font-size: 1rem; font-weight: 700; color: var(--text); line-height: 1.4; }
+    .q-required-star { color: var(--fail); margin-left: 2px; }
+    .q-optional-tag { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; margin-left: 0.4rem; }
+    .q-steps-block { margin: 0.85rem 0 0.5rem; border: 1px solid var(--blue-mid); border-radius: 10px; overflow: hidden; }
+    .q-steps-header { background: var(--blue-light); padding: 0.45rem 0.85rem; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue); }
+    .q-steps-body { padding: 0.75rem 0.85rem; display: flex; flex-direction: column; gap: 0.45rem; }
+    .q-step { display: flex; gap: 0.6rem; font-size: 0.83rem; color: var(--text); line-height: 1.45; }
+    .q-step-num { min-width: 20px; height: 20px; border-radius: 50%; background: var(--blue); color: #fff; font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .q-expected { margin: 0.75rem 0 0; padding: 0.65rem 0.85rem; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; font-size: 0.82rem; color: #166534; line-height: 1.5; }
+    .q-expected-label { font-weight: 700; display: block; margin-bottom: 0.2rem; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    .q-radio-group { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.55rem; }
     .q-radio-label {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.7rem 1rem;
-      border: 1.5px solid var(--blue-mid);
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
-      font-size: 0.88rem;
-      font-weight: 500;
-      color: var(--text);
-      user-select: none;
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.7rem 1rem; border: 1.5px solid var(--blue-mid); border-radius: 10px;
+      cursor: pointer; transition: background 0.15s, border-color 0.15s;
+      font-size: 0.88rem; font-weight: 500; color: var(--text); user-select: none;
     }
-
-    .q-radio-label:hover {
-      background: var(--blue-light);
-      border-color: var(--blue);
-    }
-
-    .q-radio-label input[type="radio"] {
-      display: none;
-    }
-
+    .q-radio-label:hover { background: var(--blue-light); border-color: var(--blue); }
+    .q-radio-label input[type="radio"] { display: none; }
     .q-radio-circle {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      border: 2px solid var(--blue-mid);
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--blue-mid);
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
       transition: border-color 0.15s, background 0.15s;
     }
-
-    .q-radio-circle::after {
-      content: '';
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #fff;
-      opacity: 0;
-      transition: opacity 0.15s;
-    }
-
-    .q-radio-label input[type="radio"]:checked ~ .q-radio-circle {
-      border-color: var(--blue);
-      background: var(--blue);
-    }
-
-    .q-radio-label input[type="radio"]:checked ~ .q-radio-circle::after {
-      opacity: 1;
-    }
-
-    .q-radio-label:has(input[type="radio"]:checked) {
-      background: var(--blue-light);
-      border-color: var(--blue);
-    }
-
-    /* Pass / Fail / N/A color accents */
-    .q-radio-label[data-val="Pass"]:has(input:checked) {
-      background: #f0fdf4;
-      border-color: #22c55e;
-    }
-    .q-radio-label[data-val="Pass"]:has(input:checked) .q-radio-circle {
-      border-color: #22c55e;
-      background: #22c55e;
-    }
-
-    .q-radio-label[data-val="Fail"]:has(input:checked) {
-      background: #fef2f2;
-      border-color: #ef4444;
-    }
-    .q-radio-label[data-val="Fail"]:has(input:checked) .q-radio-circle {
-      border-color: #ef4444;
-      background: #ef4444;
-    }
-
-    .q-radio-label[data-val="N/A"]:has(input:checked) {
-      background: #f8fafc;
-      border-color: #94a3b8;
-    }
-    .q-radio-label[data-val="N/A"]:has(input:checked) .q-radio-circle {
-      border-color: #94a3b8;
-      background: #94a3b8;
-    }
-
+    .q-radio-circle::after { content:''; width:8px; height:8px; border-radius:50%; background:#fff; opacity:0; transition: opacity 0.15s; }
+    .q-radio-label input[type="radio"]:checked ~ .q-radio-circle { border-color: var(--blue); background: var(--blue); }
+    .q-radio-label input[type="radio"]:checked ~ .q-radio-circle::after { opacity: 1; }
+    .q-radio-label:has(input[type="radio"]:checked) { background: var(--blue-light); border-color: var(--blue); }
+    .q-radio-label[data-val="Pass"]:has(input:checked) { background: var(--pass-bg); border-color: var(--pass); }
+    .q-radio-label[data-val="Pass"]:has(input:checked) .q-radio-circle { border-color: var(--pass); background: var(--pass); }
+    .q-radio-label[data-val="Fail"]:has(input:checked) { background: var(--fail-bg); border-color: var(--fail); }
+    .q-radio-label[data-val="Fail"]:has(input:checked) .q-radio-circle { border-color: var(--fail); background: var(--fail); }
+    .q-radio-label[data-val="N/A"]:has(input:checked) { background: var(--na-bg); border-color: var(--na); }
+    .q-radio-label[data-val="N/A"]:has(input:checked) .q-radio-circle { border-color: var(--na); background: var(--na); }
     .q-radio-emoji { font-size: 1rem; }
-
-    /* Text input / textarea */
-    .q-input,
-    .q-textarea {
-      margin-top: 0.85rem;
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 1.5px solid var(--blue-mid);
-      border-radius: 10px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      color: var(--text);
-      background: #f8faff;
-      outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
+    .q-input, .q-textarea {
+      margin-top: 0.85rem; width: 100%; padding: 0.75rem 1rem;
+      border: 1.5px solid var(--blue-mid); border-radius: 10px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--text);
+      background: #f8faff; outline: none; transition: border-color 0.15s, box-shadow 0.15s;
     }
-
-    .q-input:focus,
-    .q-textarea:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px rgba(26,86,219,0.12);
-      background: #fff;
-    }
-
-    .q-textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    .q-hint {
-      margin-top: 0.4rem;
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
-
-    /* File upload */
+    .q-input:focus, .q-textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,86,219,0.12); background: #fff; }
+    .q-textarea { min-height: 100px; resize: vertical; }
+    .q-hint { margin-top: 0.4rem; font-size: 0.78rem; color: var(--muted); }
     .q-file-area {
-      margin-top: 0.85rem;
-      border: 2px dashed var(--blue-mid);
-      border-radius: 12px;
-      padding: 1.5rem;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-      position: relative;
+      margin-top: 0.85rem; border: 2px dashed var(--blue-mid); border-radius: 12px;
+      padding: 1.5rem; text-align: center; cursor: pointer;
+      transition: border-color 0.15s, background 0.15s; position: relative;
     }
-
-    .q-file-area:hover {
-      border-color: var(--blue);
-      background: var(--blue-light);
-    }
-
-    .q-file-area input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
-    }
-
+    .q-file-area:hover { border-color: var(--blue); background: var(--blue-light); }
+    .q-file-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
     .q-file-icon { font-size: 2rem; margin-bottom: 0.4rem; }
     .q-file-text { font-size: 0.85rem; color: var(--muted); }
     .q-file-text strong { color: var(--blue); }
-    .q-file-name {
-      margin-top: 0.65rem;
-      font-size: 0.8rem;
-      color: var(--blue);
-      font-weight: 600;
-      display: none;
-    }
+    .q-file-name { margin-top: 0.65rem; font-size: 0.8rem; color: var(--blue); font-weight: 600; display: none; }
 
-    /* Submit area */
-    .form-submit-area {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.85rem;
-      padding-top: 0.5rem;
-    }
-
+    /* Submit */
+    .form-submit-area { display: flex; flex-direction: column; align-items: center; gap: 0.85rem; padding-top: 0.5rem; }
     .form-submit-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.55rem;
-      background: var(--blue);
-      color: #fff;
-      border: none;
-      border-radius: 14px;
-      padding: 0.9rem 2.5rem;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.18s, transform 0.15s, box-shadow 0.18s;
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      background: var(--blue); color: #fff; border: none; border-radius: 14px;
+      padding: 0.9rem 2.5rem; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 700;
+      cursor: pointer; transition: background 0.18s, transform 0.15s, box-shadow 0.18s;
       box-shadow: 0 4px 16px rgba(26,86,219,0.3);
     }
+    .form-submit-btn:hover:not(:disabled) { background: var(--blue-dark); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(26,86,219,0.38); }
+    .form-submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .form-error-msg { font-size: 0.82rem; color: var(--fail); font-weight: 600; display: none; }
 
-    .form-submit-btn:hover {
-      background: var(--blue-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(26,86,219,0.38);
-    }
-
-    .form-submit-btn:active { transform: translateY(0); }
-
-    .form-error-msg {
-      font-size: 0.82rem;
-      color: #ef4444;
-      font-weight: 600;
-      display: none;
-    }
-
-    /* ─── SUCCESS VIEW ─────────────────────────────── */
+    /* ══════════════════════════════════════════════
+       SUCCESS VIEW
+    ══════════════════════════════════════════════ */
     #view-success {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 3rem 1.5rem;
-      text-align: center;
+      display: none; flex-direction: column;
+      align-items: center; justify-content: center;
+      min-height: 100vh; padding: 3rem 1.5rem; text-align: center;
     }
-
-    .success-card {
-      background: #fff;
-      border: 2px solid var(--blue-mid);
-      border-radius: 24px;
-      padding: 3rem 2.5rem;
-      max-width: 480px;
-      width: 100%;
-      box-shadow: var(--shadow-hover);
-      animation: fadeUp 0.5s ease both;
-    }
-
-    .success-icon {
-      font-size: 3.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .success-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 2.2rem;
-      letter-spacing: 0.04em;
-      color: var(--text);
-      margin-bottom: 0.65rem;
-    }
-
+    .success-card { background: #fff; border: 2px solid var(--blue-mid); border-radius: 24px; padding: 3rem 2.5rem; max-width: 480px; width: 100%; box-shadow: var(--shadow-hover); animation: fadeUp 0.5s ease both; }
+    .success-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+    .success-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 0.04em; color: var(--text); margin-bottom: 0.65rem; }
     .success-title span { color: var(--blue); }
-
-    .success-sub {
-      font-size: 0.92rem;
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 2rem;
-    }
-
+    .success-sub { font-size: 0.92rem; color: var(--muted); line-height: 1.6; margin-bottom: 2rem; }
     .success-back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: var(--blue);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 0.75rem 1.75rem;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.92rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.18s, transform 0.15s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--blue); color: #fff; border: none; border-radius: 12px;
+      padding: 0.75rem 1.75rem; font-family: 'DM Sans', sans-serif; font-size: 0.92rem; font-weight: 700;
+      cursor: pointer; transition: background 0.18s, transform 0.15s;
       box-shadow: 0 4px 16px rgba(26,86,219,0.28);
     }
+    .success-back-btn:hover { background: var(--blue-dark); transform: translateY(-2px); }
 
-    .success-back-btn:hover {
-      background: var(--blue-dark);
-      transform: translateY(-2px);
+    /* ══════════════════════════════════════════════
+       ANALYTICS VIEW
+    ══════════════════════════════════════════════ */
+    #view-analytics { display: none; min-height: 100vh; background: #f0f4ff; }
+
+    .analytics-topbar {
+      background: #fff; border-bottom: 1.5px solid var(--blue-mid);
+      padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 16px rgba(26,86,219,0.07); flex-wrap: wrap; gap: 0.75rem;
     }
+    .analytics-topbar-left { display: flex; align-items: center; gap: 1rem; }
+    .analytics-topbar-right { display: flex; align-items: center; gap: 0.75rem; }
+    .analytics-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; letter-spacing: 0.04em; color: var(--text); }
+    .analytics-title span { color: var(--blue); }
+    .analytics-badge { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-mid); border-radius: 999px; padding: 0.25rem 0.65rem; }
+    .analytics-back { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--blue-light); border: 1.5px solid var(--blue-mid); border-radius: 999px; padding: 0.4rem 1rem; font-size: 0.82rem; font-weight: 600; color: var(--blue); cursor: pointer; transition: background 0.18s, color 0.18s; }
+    .analytics-back:hover { background: var(--blue); border-color: var(--blue-dark); color: #fff; }
+    .analytics-refresh { display: inline-flex; align-items: center; gap: 0.4rem; background: #fff; border: 1.5px solid var(--blue-mid); border-radius: 999px; padding: 0.4rem 1rem; font-size: 0.82rem; font-weight: 600; color: var(--muted); cursor: pointer; transition: background 0.18s, color 0.18s; }
+    .analytics-refresh:hover { background: var(--blue-light); color: var(--blue); }
+    .analytics-updated { font-size: 0.75rem; color: var(--muted); }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
+    /* Overview stat row */
+    .analytics-overview { padding: 1.5rem 2rem 0; }
+    .overview-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    @media(max-width:900px){ .overview-grid { grid-template-columns: repeat(2,1fr); } }
+    @media(max-width:500px){ .overview-grid { grid-template-columns: 1fr; } }
+    .ov-card {
+      background: #fff; border: 1.5px solid var(--blue-mid); border-radius: 16px;
+      padding: 1.25rem 1.5rem; box-shadow: var(--shadow);
+    }
+    .ov-value { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; letter-spacing: 0.02em; color: var(--text); line-height: 1; }
+    .ov-value.green { color: var(--pass); }
+    .ov-value.blue  { color: var(--blue); }
+    .ov-label { font-size: 0.75rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.09em; margin-top: 0.25rem; }
+    .ov-sub { font-size: 0.72rem; color: #94a3b8; margin-top: 0.15rem; }
+
+    /* Tabs */
+    .analytics-tabs-wrap { padding: 1.5rem 2rem 0; }
+    .analytics-tabs { display: flex; gap: 0.5rem; background: #fff; border: 1.5px solid var(--blue-mid); border-radius: 14px; padding: 0.35rem; width: fit-content; }
+    .atab-btn {
+      padding: 0.5rem 1.4rem; border-radius: 10px; border: none;
+      font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600;
+      color: var(--muted); background: transparent; cursor: pointer;
+      transition: background 0.18s, color 0.18s;
+    }
+    .atab-btn.active { background: var(--blue); color: #fff; box-shadow: 0 2px 10px rgba(26,86,219,0.28); }
+
+    /* Tab content */
+    .atab-content { display: none; padding: 1.5rem 2rem 3rem; }
+    .atab-content.active { display: block; }
+
+    /* Role section */
+    .role-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem; }
+    .role-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.75rem; letter-spacing: 0.03em; color: var(--text); }
+    .role-badge { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; background: var(--blue-light); color: var(--blue); border-radius: 999px; padding: 0.25rem 0.75rem; border: 1px solid var(--blue-mid); }
+
+    /* Mini stat cards */
+    .mini-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.85rem; margin-bottom: 1.25rem; }
+    @media(max-width:600px){ .mini-stats { grid-template-columns: 1fr; } }
+    .mini-stat { background: #fff; border: 1.5px solid var(--blue-mid); border-radius: 14px; padding: 1rem 1.25rem; box-shadow: var(--shadow); }
+    .mini-stat-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.9rem; letter-spacing: 0.02em; color: var(--text); line-height: 1; }
+    .mini-stat-val.green { color: var(--pass); }
+    .mini-stat-val.red { color: var(--fail); }
+    .mini-stat-label { font-size: 0.72rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.2rem; }
+
+    /* Charts row */
+    .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; }
+    @media(max-width:640px){ .charts-row { grid-template-columns: 1fr; } }
+    .chart-card { background: #fff; border: 1.5px solid var(--blue-mid); border-radius: 16px; padding: 1.25rem 1.5rem; box-shadow: var(--shadow); }
+    .chart-card-title { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+    .chart-canvas-wrap { max-width: 220px; margin: 0 auto; }
+
+    /* Question breakdown */
+    .breakdown-card { background: #fff; border: 1.5px solid var(--blue-mid); border-radius: 16px; padding: 1.25rem 1.5rem; box-shadow: var(--shadow); margin-bottom: 1.25rem; }
+    .breakdown-title { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.1rem; }
+    .qa-row { display: grid; grid-template-columns: 200px 1fr 52px; align-items: center; gap: 0.75rem; padding: 0.55rem 0; border-bottom: 1px solid #f0f4ff; }
+    .qa-row:last-child { border-bottom: none; }
+    @media(max-width:640px){ .qa-row { grid-template-columns: 1fr; gap: 0.35rem; } }
+    .qa-label { font-size: 0.78rem; font-weight: 600; color: var(--text); line-height: 1.3; }
+    .qa-label-num { font-size: 0.65rem; color: var(--muted); display: block; }
+    .qa-bar-wrap { display: flex; flex-direction: column; gap: 0.3rem; }
+    .qa-bar { display: flex; height: 14px; border-radius: 999px; overflow: hidden; background: #f0f4ff; }
+    .qa-bar-pass { background: var(--pass); transition: width 0.6s ease; }
+    .qa-bar-fail { background: var(--fail); transition: width 0.6s ease; }
+    .qa-bar-na   { background: var(--na);   transition: width 0.6s ease; }
+    .qa-bar-counts { display: flex; gap: 0.75rem; font-size: 0.68rem; font-weight: 600; }
+    .qa-bar-counts .p { color: var(--pass); }
+    .qa-bar-counts .f { color: var(--fail); }
+    .qa-bar-counts .n { color: var(--na); }
+    .qa-rate { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.02em; text-align: right; }
+    .qa-rate.good { color: var(--pass); }
+    .qa-rate.warn { color: #f59e0b; }
+    .qa-rate.bad  { color: var(--fail); }
+    .qa-rate.na   { color: var(--na); }
+
+    /* Text responses */
+    .text-responses-card { background: #fff; border: 1.5px solid var(--blue-mid); border-radius: 16px; padding: 1.25rem 1.5rem; box-shadow: var(--shadow); margin-bottom: 1.25rem; }
+    .text-section-title { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.85rem; }
+    .text-response-item { padding: 0.65rem 0; border-bottom: 1px solid #f0f4ff; display: flex; gap: 0.75rem; align-items: flex-start; }
+    .text-response-item:last-child { border-bottom: none; }
+    .text-response-name { font-size: 0.72rem; font-weight: 700; color: var(--blue); white-space: nowrap; flex-shrink: 0; }
+    .text-response-text { font-size: 0.82rem; color: var(--text); line-height: 1.5; }
+    .text-empty { font-size: 0.82rem; color: var(--muted); font-style: italic; }
+
+    /* Screenshot thumbnails */
+    .screenshot-thumb { width: 80px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid var(--blue-mid); cursor: pointer; transition: transform 0.18s; }
+    .screenshot-thumb:hover { transform: scale(1.05); }
+
+    /* Individual responses */
+    .indiv-card { background: #fff; border: 1.5px solid var(--blue-mid); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; }
+    .indiv-card-title { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 1.1rem 1.5rem; border-bottom: 1.5px solid #f0f4ff; }
+    .indiv-row { border-bottom: 1px solid #f0f4ff; }
+    .indiv-row:last-child { border-bottom: none; }
+    .indiv-row-header {
+      display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; gap: 1rem;
+      padding: 0.85rem 1.5rem; cursor: pointer; transition: background 0.15s;
+    }
+    .indiv-row-header:hover { background: #f8faff; }
+    .indiv-name { font-size: 0.9rem; font-weight: 700; color: var(--text); }
+    .indiv-date { font-size: 0.75rem; color: var(--muted); }
+    .indiv-approval { font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.65rem; border-radius: 999px; white-space: nowrap; }
+    .indiv-approval.yes { background: var(--pass-bg); color: #166534; border: 1px solid var(--pass-border); }
+    .indiv-approval.no  { background: var(--fail-bg); color: #991b1b; border: 1px solid var(--fail-border); }
+    .indiv-toggle { font-size: 0.75rem; color: var(--muted); transition: transform 0.2s; }
+    .indiv-row.open .indiv-toggle { transform: rotate(180deg); }
+    .indiv-details { display: none; padding: 0 1.5rem 1rem; }
+    .indiv-row.open .indiv-details { display: block; }
+    .indiv-answers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); gap: 0.5rem; margin-bottom: 0.75rem; }
+    .indiv-answer { background: #f8faff; border-radius: 8px; padding: 0.5rem 0.65rem; font-size: 0.72rem; }
+    .indiv-answer-q { color: var(--muted); font-weight: 600; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.15rem; }
+    .indiv-answer-v { font-weight: 700; }
+    .indiv-answer-v.pass { color: var(--pass); }
+    .indiv-answer-v.fail { color: var(--fail); }
+    .indiv-answer-v.na   { color: var(--na); }
+
+    /* Empty/loading states */
+    .empty-state { text-align: center; padding: 3rem 1rem; }
+    .empty-state-icon { font-size: 3rem; margin-bottom: 0.75rem; }
+    .empty-state-title { font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .empty-state-sub { font-size: 0.85rem; color: var(--muted); }
+    .analytics-loading { display: flex; align-items: center; justify-content: center; min-height: 300px; }
+    .spinner { width: 40px; height: 40px; border: 4px solid var(--blue-mid); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Lightbox */
+    #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 999; display: none; align-items: center; justify-content: center; padding: 2rem; }
+    #lightbox.open { display: flex; }
+    #lightbox img { max-width: 100%; max-height: 90vh; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+    #lightbox-close { position: fixed; top: 1.25rem; right: 1.5rem; background: rgba(255,255,255,0.18); color: #fff; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; }
+
+    /* ══════════════════════════════════════════════
+       PASSWORD MODAL
+    ══════════════════════════════════════════════ */
+    #modal-password {
+      position: fixed; inset: 0; background: rgba(13,27,62,0.55);
+      backdrop-filter: blur(6px); z-index: 500;
+      display: none; align-items: center; justify-content: center; padding: 1.5rem;
+    }
+    #modal-password.open { display: flex; }
+    .modal-box {
+      background: #fff; border-radius: 24px; padding: 2.5rem 2.25rem;
+      max-width: 420px; width: 100%; box-shadow: 0 24px 80px rgba(13,27,62,0.28);
+      animation: fadeUp 0.3s ease both;
+    }
+    .modal-icon { font-size: 2.5rem; text-align: center; margin-bottom: 1rem; }
+    .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.9rem; letter-spacing: 0.04em; color: var(--text); text-align: center; margin-bottom: 0.4rem; }
+    .modal-title span { color: var(--blue); }
+    .modal-sub { font-size: 0.85rem; color: var(--muted); text-align: center; margin-bottom: 1.5rem; line-height: 1.5; }
+    .modal-input {
+      width: 100%; padding: 0.8rem 1rem; border: 1.5px solid var(--blue-mid); border-radius: 12px;
+      font-family: 'DM Sans', sans-serif; font-size: 1rem; color: var(--text);
+      background: #f8faff; outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+      margin-bottom: 0.75rem; letter-spacing: 0.12em;
+    }
+    .modal-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,86,219,0.12); background: #fff; }
+    .modal-input.shake { animation: shake 0.4s ease; }
+    .modal-error { font-size: 0.8rem; color: var(--fail); font-weight: 600; margin-bottom: 0.75rem; display: none; }
+    .modal-btn {
+      width: 100%; padding: 0.85rem; background: var(--blue); color: #fff; border: none;
+      border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; transition: background 0.18s, transform 0.15s;
+      box-shadow: 0 4px 16px rgba(26,86,219,0.3);
+    }
+    .modal-btn:hover { background: var(--blue-dark); transform: translateY(-1px); }
+    .modal-cancel { width: 100%; padding: 0.6rem; background: none; color: var(--muted); border: none; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; margin-top: 0.5rem; transition: color 0.15s; }
+    .modal-cancel:hover { color: var(--text); }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes shake {
+      0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)}
+      40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)}
     }
   </style>
 </head>
@@ -767,7 +444,6 @@
   ══════════════════════════════════════════════ -->
   <div id="view-home">
     <div class="wrapper">
-
       <div class="header">
         <div class="logo-badge">
           <span class="logo-dot"></span>
@@ -778,7 +454,6 @@
       </div>
 
       <div class="grid">
-
         <div class="card" onclick="openForm('sales')">
           <div class="card-icon">📋</div>
           <div class="card-info">
@@ -828,7 +503,13 @@
             <span class="card-tag">Assessing Physician</span>
           </div>
         </div>
+      </div>
 
+      <div class="summary-btn-wrap">
+        <button class="summary-btn" onclick="openPasswordModal()">
+          <span class="summary-btn-icon">🔒</span>
+          Summary
+        </button>
       </div>
 
       <p class="footer">© 2026 One Health Network &nbsp;·&nbsp; Internal Portal</p>
@@ -842,14 +523,12 @@
   <div id="view-form">
     <div class="form-header">
       <button class="form-back-btn" onclick="goHome()">← Back</button>
-      <div class="form-header-info">
+      <div>
         <span class="form-header-role" id="form-role-label"></span>
         <span class="form-header-title">UAT Survey Form</span>
       </div>
     </div>
-    <div class="form-body" id="form-body">
-      <!-- Dynamically rendered -->
-    </div>
+    <div class="form-body" id="form-body"></div>
   </div>
 
 
@@ -860,805 +539,819 @@
     <div class="success-card">
       <div class="success-icon">✅</div>
       <div class="success-title">Response <span>Submitted!</span></div>
-      <p class="success-sub">
-        Thank you for completing the UAT survey.<br>
-        Your feedback has been recorded successfully.
-      </p>
+      <p class="success-sub">Thank you for completing the UAT survey.<br>Your feedback has been recorded successfully.</p>
       <button class="success-back-btn" onclick="goHome()">← Back to Role Selection</button>
     </div>
   </div>
 
 
-  <script>
-    // ─────────────────────────────────────────────────────────
-    // QUESTION DATA
-    // ─────────────────────────────────────────────────────────
+  <!-- ══════════════════════════════════════════════
+       VIEW: ANALYTICS
+  ══════════════════════════════════════════════ -->
+  <div id="view-analytics">
+    <div class="analytics-topbar">
+      <div class="analytics-topbar-left">
+        <button class="analytics-back" onclick="goHome()">← Back</button>
+        <div>
+          <div class="analytics-title">APE <span>2026</span> Analytics</div>
+        </div>
+        <span class="analytics-badge">Admin</span>
+      </div>
+      <div class="analytics-topbar-right">
+        <span class="analytics-updated" id="analytics-updated"></span>
+        <button class="analytics-refresh" onclick="loadAnalytics()">↻ Refresh</button>
+      </div>
+    </div>
 
+    <div class="analytics-overview">
+      <div class="overview-grid" id="overview-grid">
+        <div class="ov-card"><div class="ov-value blue" id="ov-total">—</div><div class="ov-label">Total Responses</div></div>
+        <div class="ov-card"><div class="ov-value blue" id="ov-sales">—</div><div class="ov-label">Sales Responses</div></div>
+        <div class="ov-card"><div class="ov-value blue" id="ov-manager">—</div><div class="ov-label">Manager Responses</div></div>
+        <div class="ov-card"><div class="ov-value green" id="ov-approval">—</div><div class="ov-label">Overall Approval Rate</div><div class="ov-sub">Approved system for deployment</div></div>
+      </div>
+    </div>
+
+    <div class="analytics-tabs-wrap">
+      <div class="analytics-tabs">
+        <button class="atab-btn active" data-tab="sales" onclick="switchTab('sales')">📋 Sales</button>
+        <button class="atab-btn" data-tab="manager" onclick="switchTab('manager')">🧑‍💼 Manager</button>
+      </div>
+    </div>
+
+    <div class="atab-content active" data-tab="sales" id="tab-content-sales">
+      <div class="analytics-loading"><div class="spinner"></div></div>
+    </div>
+    <div class="atab-content" data-tab="manager" id="tab-content-manager">
+      <div class="analytics-loading"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════
+       MODAL: PASSWORD
+  ══════════════════════════════════════════════ -->
+  <div id="modal-password">
+    <div class="modal-box">
+      <div class="modal-icon">🔐</div>
+      <div class="modal-title">Admin <span>Access</span></div>
+      <p class="modal-sub">Enter the admin password to view the UAT analytics dashboard.</p>
+      <input class="modal-input" type="password" id="pwd-input" placeholder="Enter password…"
+        onkeydown="if(event.key==='Enter') checkPassword()" />
+      <div class="modal-error" id="pwd-error">Incorrect password. Please try again.</div>
+      <button class="modal-btn" onclick="checkPassword()">Continue →</button>
+      <button class="modal-cancel" onclick="closePasswordModal()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Lightbox for screenshots -->
+  <div id="lightbox" onclick="closeLightbox()">
+    <button id="lightbox-close" onclick="closeLightbox()">✕</button>
+    <img id="lightbox-img" src="" alt="Screenshot" onclick="event.stopPropagation()" />
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════
+       SCRIPTS
+  ══════════════════════════════════════════════ -->
+  <script>
+    // ─────────────────────────────────────────────
+    // FIREBASE INIT
+    // ─────────────────────────────────────────────
+    const firebaseConfig = {
+      apiKey: "AIzaSyAJ7YfvNAcTH1YyDlWOlLS_CMXT0ADdyxs",
+      authDomain: "ohn-ape-portal.firebaseapp.com",
+      projectId: "ohn-ape-portal",
+      storageBucket: "ohn-ape-portal.firebasestorage.app",
+      messagingSenderId: "586987435617",
+      appId: "1:586987435617:web:4670e2fbf91399c7841c20"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db      = firebase.firestore();
+    const storage = firebase.storage();
+
+    // ─────────────────────────────────────────────
+    // QUESTION DATA
+    // ─────────────────────────────────────────────
     const TEST_OPTIONS = ['Pass', 'Fail', 'N/A'];
     const TEST_EMOJIS  = { Pass: '✅', Fail: '❌', 'N/A': '—' };
-
     const FINAL_OPTIONS = [
       'Yes, I approve this system for deployment',
       'No, I do not approve this system for deployment'
     ];
+    const ADMIN_PASSWORD = 'APE2026';
 
-    // ── SALES questions ──────────────────────────────────────
     const salesQuestions = [
-      {
-        id: 1, type: 'text', required: true,
-        title: 'FULL NAME'
-      },
-      {
-        id: 2, type: 'test', required: true,
-        title: 'LOGIN & AUTHENTICATION',
-        steps: [
-          'Go to https://ape.onehealthnetwork.com.ph',
-          'Enter your username and password.',
-          'Click Log In.'
-        ],
-        expected: 'You will be redirected to the Dashboard screen after logging in successfully.'
-      },
-      {
-        id: 3, type: 'test', required: true,
-        title: 'EDIT PROFILE',
-        steps: [
-          'Click your name at the top of the sidebar to open your profile.',
-          'Update the information you want to change (such as your personal details, profile photo, e-signature, or password).',
-          'Click Save.'
-        ],
-        expected: 'Your changes will be saved successfully.'
-      },
-      {
-        id: 4, type: 'test', required: true,
-        title: 'ASN CREATION',
-        steps: [
-          'Go to the ASN tab.',
-          'Click the Create New ASN button.',
-          'Fill out the required information in the form.',
-          'Click Save and Submit.'
-        ],
-        expected: 'The ASN should be successfully created and appear in the list. If there are any errors, a message should appear explaining the issue.'
-      },
-      {
-        id: 5, type: 'test', required: true,
-        title: 'DRAFT & EDIT ASN',
-        steps: [
-          'Go to the ASN tab.',
-          'Click Create New ASN.',
-          'Fill out the form, but do not sign it yet. Then click Save and Submit.',
-          'Find the ASN in the list. It should be marked as Draft.',
-          'Click View.',
-          'Update any information as needed. You may also sign it this time.',
-          'Click Save and Submit again.'
-        ],
-        expected: 'The ASN should be saved as a Draft. The draft ASN should still be editable. After updating and submitting, it should be saved properly and can be approved.'
-      },
-      {
-        id: 6, type: 'test', required: true,
-        title: 'ASN APPROVAL & REJECTION',
-        steps: [
-          'Navigate to the ASN tab.',
-          'Find the ASN you want to check, then click View.',
-          'Scroll down to the bottom of the page.',
-          'Choose Approve or Reject.'
-        ],
-        expected: 'The ASN will be successfully approved or rejected, and the status will update accordingly.'
-      },
-      {
-        id: 7, type: 'test', required: true,
-        title: 'ADD MEDICAL SERVICE',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click Browse All Services.',
-          'Click + Add New Service.',
-          'Fill out the required details in the form.',
-          'Click Create.'
-        ],
-        expected: 'The new service should be added successfully and appear in the list of services.'
-      },
-      {
-        id: 8, type: 'test', required: true,
-        title: 'EDIT MEDICAL SERVICE',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click Browse All Services.',
-          'Find the service you want to update and click the vertical three-dot (⋮) button next to it.',
-          'Select Edit Service.',
-          'Update the information as needed.',
-          'Click Save Changes.'
-        ],
-        expected: 'The service should be updated successfully, and the changes should appear in the list.'
-      },
-      {
-        id: 9, type: 'test', required: true,
-        title: 'DEACTIVATE MEDICAL SERVICE',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click Browse All Services.',
-          'Find the service you want to deactivate and click the vertical three-dot (⋮) button next to it.',
-          'Select Deactivate.',
-          'Click Confirm.'
-        ],
-        expected: 'The service should be deactivated successfully and no longer active in the list.'
-      },
-      {
-        id: 10, type: 'test', required: true,
-        title: 'ACTIVATE MEDICAL SERVICE',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click Browse All Services.',
-          'Find the deactivated service and click the vertical three-dot (⋮) button next to it.',
-          'Select Activate.',
-          'Click Confirm.'
-        ],
-        expected: 'The service should be activated successfully and appear as active in the list.'
-      },
-      {
-        id: 11, type: 'test', required: true,
-        title: 'DELETE MEDICAL SERVICE',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click Browse All Services.',
-          'Find the service you want to delete and click the vertical three-dot (⋮) button next to it.',
-          'Select Delete.',
-          'Click Delete again to confirm.'
-        ],
-        expected: 'The service should be deleted successfully and removed from the list.'
-      },
-      {
-        id: 12, type: 'test', required: true,
-        title: 'ADD MEDICAL SERVICE PACKAGE',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click Package Library.',
-          'Click + Add Package.',
-          'Fill out the required details in the form.',
-          'Click Create.'
-        ],
-        expected: 'The package should be added successfully and appear in the Package Library.'
-      },
-      {
-        id: 13, type: 'test', required: true,
-        title: 'EDIT MEDICAL SERVICE PACKAGE',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click Package Library.',
-          'Find the package you want to update and click the vertical three-dot (⋮) button next to it.',
-          'Select Edit.',
-          'Update the information as needed.',
-          'Click Save Changes.'
-        ],
-        expected: 'The package should be updated successfully, and the changes should appear in the list.'
-      },
-      {
-        id: 14, type: 'test', required: true,
-        title: 'DEACTIVATE MEDICAL SERVICE PACKAGE',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click Package Library.',
-          'Find the package you want to deactivate and click the vertical three-dot (⋮) button next to it.',
-          'Select Deactivate.',
-          'Click Confirm.'
-        ],
-        expected: 'The package should be deactivated successfully and marked as inactive in the list.'
-      },
-      {
-        id: 15, type: 'test', required: true,
-        title: 'ACTIVATE MEDICAL SERVICE PACKAGE',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click Package Library.',
-          'Find the package you want to activate and click the vertical three-dot (⋮) button next to it.',
-          'Select Activate.',
-          'Click Confirm.'
-        ],
-        expected: 'The package should be activated successfully and appear as active in the list.'
-      },
-      {
-        id: 16, type: 'test', required: true,
-        title: 'ADD HMO',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click HMO Management.',
-          'Click + Add HMO.',
-          'Fill out the required details in the form.',
-          'Click Create HMO.'
-        ],
-        expected: 'The HMO should be added successfully and appear in the HMO Management list.'
-      },
-      {
-        id: 17, type: 'test', required: true,
-        title: 'DEACTIVATE HMO',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click HMO Management.',
-          'Find the HMO you want to deactivate in the list and click the vertical three-dot (⋮) button next to it.',
-          'Select Deactivate.',
-          'Click Confirm.'
-        ],
-        expected: 'The HMO should be deactivated successfully and marked as inactive in the list.'
-      },
-      {
-        id: 18, type: 'test', required: true,
-        title: 'ACTIVATE HMO',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click HMO Management.',
-          'Find the HMO you want to activate in the list and click the vertical three-dot (⋮) button next to it.',
-          'Select Activate.',
-          'Click Confirm.'
-        ],
-        expected: 'The HMO should be activated successfully and appear as active in the list.'
-      },
-      {
-        id: 19, type: 'test', required: true,
-        title: 'MANAGE HMO PACKAGES PRICES',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click HMO Management.',
-          'Find the HMO package you want to update and click Manage.',
-          'Update the prices or other details in the form.',
-          'Click Save Changes.'
-        ],
-        expected: 'The HMO package prices should be saved successfully and reflected in the list.'
-      },
-      {
-        id: 20, type: 'test', required: true,
-        title: 'CREATE INSTRUCTION TEMPLATES',
-        steps: [
-          'Go to the Instruction Templates tab.',
-          'Click + New Template.',
-          'Fill out the required information in the form.',
-          'Click Create.'
-        ],
-        expected: 'The instruction template should be created successfully and appear in the list.'
-      },
-      {
-        id: 21, type: 'test', required: true,
-        title: 'EDIT INSTRUCTION TEMPLATE',
-        steps: [
-          'Go to the Instruction Templates tab.',
-          'Find the template you want to update and click the vertical three-dot (⋮) button next to it.',
-          'Select Edit.',
-          'Update the information as needed.',
-          'Click Update.'
-        ],
-        expected: 'The instruction template should be updated successfully and reflect the changes in the list.'
-      },
-      {
-        id: 22, type: 'test', required: true,
-        title: 'DELETE INSTRUCTION TEMPLATE',
-        steps: [
-          'Go to the Instruction Templates tab.',
-          'Find the template you want to delete and click the vertical three-dot (⋮) button next to it.',
-          'Select Delete.',
-          'Click Delete again to confirm.'
-        ],
-        expected: 'The instruction template should be deleted successfully and removed from the list.'
-      },
-      {
-        id: 23, type: 'textarea', required: false,
-        title: 'DID YOU ENCOUNTER ANY OTHER ISSUES?',
-        hint: 'Please specify which feature is failing or has a problem.'
-      },
-      {
-        id: 24, type: 'file', required: false,
-        title: 'ATTACH SCREENSHOT (IF AVAILABLE)'
-      },
-      {
-        id: 25, type: 'textarea', required: false,
-        title: 'SUGGESTIONS FOR IMPROVEMENT',
-        hint: 'Please share any recommendations to improve the system.'
-      },
-      {
-        id: 26, type: 'final', required: true,
-        title: 'FINAL ACCEPTANCE',
-        hint: 'Based on your testing, do you approve this system for deployment?'
-      },
-      {
-        id: 27, type: 'textarea', required: false,
-        title: 'ADDITIONAL COMMENTS'
-      }
+      { id:1, type:'text', required:true, title:'FULL NAME' },
+      { id:2, type:'test', required:true, title:'LOGIN & AUTHENTICATION', short:'Login & Auth',
+        steps:['Go to https://ape.onehealthnetwork.com.ph','Enter your username and password.','Click Log In.'],
+        expected:'You will be redirected to the Dashboard screen after logging in successfully.' },
+      { id:3, type:'test', required:true, title:'EDIT PROFILE', short:'Edit Profile',
+        steps:['Click your name at the top of the sidebar to open your profile.','Update the information you want to change (such as your personal details, profile photo, e-signature, or password).','Click Save.'],
+        expected:'Your changes will be saved successfully.' },
+      { id:4, type:'test', required:true, title:'ASN CREATION', short:'ASN Creation',
+        steps:['Go to the ASN tab.','Click the Create New ASN button.','Fill out the required information in the form.','Click Save and Submit.'],
+        expected:'The ASN should be successfully created and appear in the list. If there are any errors, a message should appear explaining the issue.' },
+      { id:5, type:'test', required:true, title:'DRAFT & EDIT ASN', short:'Draft & Edit ASN',
+        steps:['Go to the ASN tab.','Click Create New ASN.','Fill out the form, but do not sign it yet. Then click Save and Submit.','Find the ASN in the list. It should be marked as Draft.','Click View.','Update any information as needed. You may also sign it this time.','Click Save and Submit again.'],
+        expected:'The ASN should be saved as a Draft. The draft ASN should still be editable. After updating and submitting, it should be saved properly and can be approved.' },
+      { id:6, type:'test', required:true, title:'ASN APPROVAL & REJECTION', short:'ASN Approval',
+        steps:['Navigate to the ASN tab.','Find the ASN you want to check, then click View.','Scroll down to the bottom of the page.','Choose Approve or Reject.'],
+        expected:'The ASN will be successfully approved or rejected, and the status will update accordingly.' },
+      { id:7, type:'test', required:true, title:'ADD MEDICAL SERVICE', short:'Add Service',
+        steps:['Go to the Medical Services tab.','Click Browse All Services.','Click + Add New Service.','Fill out the required details in the form.','Click Create.'],
+        expected:'The new service should be added successfully and appear in the list of services.' },
+      { id:8, type:'test', required:true, title:'EDIT MEDICAL SERVICE', short:'Edit Service',
+        steps:['Go to the Medical Services tab.','Click Browse All Services.','Find the service you want to update and click the vertical three-dot (⋮) button next to it.','Select Edit Service.','Update the information as needed.','Click Save Changes.'],
+        expected:'The service should be updated successfully, and the changes should appear in the list.' },
+      { id:9, type:'test', required:true, title:'DEACTIVATE MEDICAL SERVICE', short:'Deactivate Service',
+        steps:['Go to the Medical Services tab.','Click Browse All Services.','Find the service you want to deactivate and click the vertical three-dot (⋮) button next to it.','Select Deactivate.','Click Confirm.'],
+        expected:'The service should be deactivated successfully and no longer active in the list.' },
+      { id:10, type:'test', required:true, title:'ACTIVATE MEDICAL SERVICE', short:'Activate Service',
+        steps:['Go to the Medical Services tab.','Click Browse All Services.','Find the deactivated service and click the vertical three-dot (⋮) button next to it.','Select Activate.','Click Confirm.'],
+        expected:'The service should be activated successfully and appear as active in the list.' },
+      { id:11, type:'test', required:true, title:'DELETE MEDICAL SERVICE', short:'Delete Service',
+        steps:['Go to the Medical Services tab.','Click Browse All Services.','Find the service you want to delete and click the vertical three-dot (⋮) button next to it.','Select Delete.','Click Delete again to confirm.'],
+        expected:'The service should be deleted successfully and removed from the list.' },
+      { id:12, type:'test', required:true, title:'ADD MEDICAL SERVICE PACKAGE', short:'Add Package',
+        steps:['Go to the Medical Services tab.','Click Package Library.','Click + Add Package.','Fill out the required details in the form.','Click Create.'],
+        expected:'The package should be added successfully and appear in the Package Library.' },
+      { id:13, type:'test', required:true, title:'EDIT MEDICAL SERVICE PACKAGE', short:'Edit Package',
+        steps:['Go to the Medical Services tab.','Click Package Library.','Find the package you want to update and click the vertical three-dot (⋮) button next to it.','Select Edit.','Update the information as needed.','Click Save Changes.'],
+        expected:'The package should be updated successfully, and the changes should appear in the list.' },
+      { id:14, type:'test', required:true, title:'DEACTIVATE MEDICAL SERVICE PACKAGE', short:'Deactivate Package',
+        steps:['Go to the Medical Services tab.','Click Package Library.','Find the package you want to deactivate and click the vertical three-dot (⋮) button next to it.','Select Deactivate.','Click Confirm.'],
+        expected:'The package should be deactivated successfully and marked as inactive in the list.' },
+      { id:15, type:'test', required:true, title:'ACTIVATE MEDICAL SERVICE PACKAGE', short:'Activate Package',
+        steps:['Go to the Medical Services tab.','Click Package Library.','Find the package you want to activate and click the vertical three-dot (⋮) button next to it.','Select Activate.','Click Confirm.'],
+        expected:'The package should be activated successfully and appear as active in the list.' },
+      { id:16, type:'test', required:true, title:'ADD HMO', short:'Add HMO',
+        steps:['Go to the Medical Services tab.','Click HMO Management.','Click + Add HMO.','Fill out the required details in the form.','Click Create HMO.'],
+        expected:'The HMO should be added successfully and appear in the HMO Management list.' },
+      { id:17, type:'test', required:true, title:'DEACTIVATE HMO', short:'Deactivate HMO',
+        steps:['Go to the Medical Services tab.','Click HMO Management.','Find the HMO you want to deactivate in the list and click the vertical three-dot (⋮) button next to it.','Select Deactivate.','Click Confirm.'],
+        expected:'The HMO should be deactivated successfully and marked as inactive in the list.' },
+      { id:18, type:'test', required:true, title:'ACTIVATE HMO', short:'Activate HMO',
+        steps:['Go to the Medical Services tab.','Click HMO Management.','Find the HMO you want to activate in the list and click the vertical three-dot (⋮) button next to it.','Select Activate.','Click Confirm.'],
+        expected:'The HMO should be activated successfully and appear as active in the list.' },
+      { id:19, type:'test', required:true, title:'MANAGE HMO PACKAGES PRICES', short:'HMO Prices',
+        steps:['Go to the Medical Services tab.','Click HMO Management.','Find the HMO package you want to update and click Manage.','Update the prices or other details in the form.','Click Save Changes.'],
+        expected:'The HMO package prices should be saved successfully and reflected in the list.' },
+      { id:20, type:'test', required:true, title:'CREATE INSTRUCTION TEMPLATES', short:'Create Template',
+        steps:['Go to the Instruction Templates tab.','Click + New Template.','Fill out the required information in the form.','Click Create.'],
+        expected:'The instruction template should be created successfully and appear in the list.' },
+      { id:21, type:'test', required:true, title:'EDIT INSTRUCTION TEMPLATE', short:'Edit Template',
+        steps:['Go to the Instruction Templates tab.','Find the template you want to update and click the vertical three-dot (⋮) button next to it.','Select Edit.','Update the information as needed.','Click Update.'],
+        expected:'The instruction template should be updated successfully and reflect the changes in the list.' },
+      { id:22, type:'test', required:true, title:'DELETE INSTRUCTION TEMPLATE', short:'Delete Template',
+        steps:['Go to the Instruction Templates tab.','Find the template you want to delete and click the vertical three-dot (⋮) button next to it.','Select Delete.','Click Delete again to confirm.'],
+        expected:'The instruction template should be deleted successfully and removed from the list.' },
+      { id:23, type:'textarea', required:false, title:'DID YOU ENCOUNTER ANY OTHER ISSUES?', hint:'Please specify which feature is failing or has a problem.' },
+      { id:24, type:'file', required:false, title:'ATTACH SCREENSHOT (IF AVAILABLE)' },
+      { id:25, type:'textarea', required:false, title:'SUGGESTIONS FOR IMPROVEMENT', hint:'Please share any recommendations to improve the system.' },
+      { id:26, type:'final', required:true, title:'FINAL ACCEPTANCE', hint:'Based on your testing, do you approve this system for deployment?' },
+      { id:27, type:'textarea', required:false, title:'ADDITIONAL COMMENTS' }
     ];
 
-    // ── MANAGER questions ─────────────────────────────────────
     const managerQuestions = [
-      {
-        id: 1, type: 'text', required: true,
-        title: 'FULL NAME'
-      },
-      {
-        id: 2, type: 'test', required: true,
-        title: 'LOGIN & AUTHENTICATION',
-        steps: [
-          'Go to https://ape.onehealthnetwork.com.ph',
-          'Enter your username and password.',
-          'Click Log In.'
-        ],
-        expected: 'You will be redirected to the Dashboard screen after logging in successfully.'
-      },
-      {
-        id: 3, type: 'test', required: true,
-        title: 'EDIT PROFILE',
-        steps: [
-          'Click your name at the top of the sidebar to open your profile.',
-          'Update the information you want to change (such as your personal details, profile photo, e-signature, or password).',
-          'Click Save.'
-        ],
-        expected: 'Your changes will be saved successfully.'
-      },
-      {
-        id: 4, type: 'test', required: true,
-        title: 'ASN APPROVAL & REJECTION',
-        steps: [
-          'Navigate to the ASN tab.',
-          'Find the ASN you want to check, then click View.',
-          'Scroll down to the bottom of the page.',
-          'Choose Approve or Reject.'
-        ],
-        expected: 'The ASN will be successfully approved or rejected, and the status will update accordingly.'
-      },
-      {
-        id: 5, type: 'test', required: true,
-        title: 'ADD MEDICAL SERVICE',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click Browse All Services.',
-          'Click + Add New Service.',
-          'Fill out the required details in the form.',
-          'Click Create.'
-        ],
-        expected: 'The new service should be added successfully and appear in the list of services.'
-      },
-      {
-        id: 6, type: 'test', required: true,
-        title: 'EDIT MEDICAL SERVICE',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click Browse All Services.',
-          'Find the service you want to update and click the vertical three-dot (⋮) button next to it.',
-          'Select Edit Service.',
-          'Update the information as needed.',
-          'Click Save Changes.'
-        ],
-        expected: 'The service should be updated successfully, and the changes should appear in the list.'
-      },
-      {
-        id: 7, type: 'test', required: true,
-        title: 'DEACTIVATE MEDICAL SERVICE',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click Browse All Services.',
-          'Find the service you want to deactivate and click the vertical three-dot (⋮) button next to it.',
-          'Select Deactivate.',
-          'Click Confirm.'
-        ],
-        expected: 'The service should be deactivated successfully and no longer active in the list.'
-      },
-      {
-        id: 8, type: 'test', required: true,
-        title: 'ACTIVATE MEDICAL SERVICE',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click Browse All Services.',
-          'Find the deactivated service and click the vertical three-dot (⋮) button next to it.',
-          'Select Activate.',
-          'Click Confirm.'
-        ],
-        expected: 'The service should be activated successfully and appear as active in the list.'
-      },
-      {
-        id: 9, type: 'test', required: true,
-        title: 'DELETE MEDICAL SERVICE',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click Browse All Services.',
-          'Find the service you want to delete and click the vertical three-dot (⋮) button next to it.',
-          'Select Delete.',
-          'Click Delete again to confirm.'
-        ],
-        expected: 'The service should be deleted successfully and removed from the list.'
-      },
-      {
-        id: 10, type: 'test', required: true,
-        title: 'ADD MEDICAL SERVICE PACKAGE',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click Package Library.',
-          'Click + Add Package.',
-          'Fill out the required details in the form.',
-          'Click Create.'
-        ],
-        expected: 'The package should be added successfully and appear in the Package Library.'
-      },
-      {
-        id: 11, type: 'test', required: true,
-        title: 'EDIT MEDICAL SERVICE PACKAGE',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click Package Library.',
-          'Find the package you want to update and click the vertical three-dot (⋮) button next to it.',
-          'Select Edit.',
-          'Update the information as needed.',
-          'Click Save Changes.'
-        ],
-        expected: 'The package should be updated successfully, and the changes should appear in the list.'
-      },
-      {
-        id: 12, type: 'test', required: true,
-        title: 'DEACTIVATE MEDICAL SERVICE PACKAGE',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click Package Library.',
-          'Find the package you want to deactivate and click the vertical three-dot (⋮) button next to it.',
-          'Select Deactivate.',
-          'Click Confirm.'
-        ],
-        expected: 'The package should be deactivated successfully and marked as inactive in the list.'
-      },
-      {
-        id: 13, type: 'test', required: true,
-        title: 'ACTIVATE MEDICAL SERVICE PACKAGE',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click Package Library.',
-          'Find the package you want to activate and click the vertical three-dot (⋮) button next to it.',
-          'Select Activate.',
-          'Click Confirm.'
-        ],
-        expected: 'The package should be activated successfully and appear as active in the list.'
-      },
-      {
-        id: 14, type: 'test', required: true,
-        title: 'ADD HMO',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click HMO Management.',
-          'Click + Add HMO.',
-          'Fill out the required details in the form.',
-          'Click Create HMO.'
-        ],
-        expected: 'The HMO should be added successfully and appear in the HMO Management list.'
-      },
-      {
-        id: 15, type: 'test', required: true,
-        title: 'DEACTIVATE HMO',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click HMO Management.',
-          'Find the HMO you want to deactivate in the list and click the vertical three-dot (⋮) button next to it.',
-          'Select Deactivate.',
-          'Click Confirm.'
-        ],
-        expected: 'The HMO should be deactivated successfully and marked as inactive in the list.'
-      },
-      {
-        id: 16, type: 'test', required: true,
-        title: 'ACTIVATE HMO',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click HMO Management.',
-          'Find the HMO you want to activate in the list and click the vertical three-dot (⋮) button next to it.',
-          'Select Activate.',
-          'Click Confirm.'
-        ],
-        expected: 'The HMO should be activated successfully and appear as active in the list.'
-      },
-      {
-        id: 17, type: 'test', required: true,
-        title: 'MANAGE HMO PACKAGES PRICES',
-        steps: [
-          'Go to the Medical Services tab.',
-          'Click HMO Management.',
-          'Find the HMO package you want to update and click Manage.',
-          'Update the prices or other details in the form.',
-          'Click Save Changes.'
-        ],
-        expected: 'The HMO package prices should be saved successfully and reflected in the list.'
-      },
-      {
-        id: 18, type: 'test', required: true,
-        title: 'BUDGET SHEET APPROVAL & REJECTION',
-        note: 'For Managing Directors only',
-        steps: [
-          'Go to the Budget Sheets tab.',
-          'Choose a company from the list.',
-          'Click View & Manage.',
-          'Click Approve or Reject.'
-        ],
-        expected: 'The selected company or budget sheet should be approved or rejected by the director.'
-      },
-      {
-        id: 19, type: 'textarea', required: false,
-        title: 'DID YOU ENCOUNTER ANY OTHER ISSUES?',
-        hint: 'Please specify which feature is failing or has a problem.'
-      },
-      {
-        id: 20, type: 'file', required: false,
-        title: 'ATTACH SCREENSHOT (IF AVAILABLE)'
-      },
-      {
-        id: 21, type: 'textarea', required: false,
-        title: 'SUGGESTIONS FOR IMPROVEMENT',
-        hint: 'Please share any recommendations to improve the system.'
-      },
-      {
-        id: 22, type: 'final', required: true,
-        title: 'FINAL ACCEPTANCE',
-        hint: 'Based on your testing, do you approve this system for deployment?'
-      },
-      {
-        id: 23, type: 'textarea', required: false,
-        title: 'ADDITIONAL COMMENTS'
-      }
+      { id:1, type:'text', required:true, title:'FULL NAME' },
+      { id:2, type:'test', required:true, title:'LOGIN & AUTHENTICATION', short:'Login & Auth',
+        steps:['Go to https://ape.onehealthnetwork.com.ph','Enter your username and password.','Click Log In.'],
+        expected:'You will be redirected to the Dashboard screen after logging in successfully.' },
+      { id:3, type:'test', required:true, title:'EDIT PROFILE', short:'Edit Profile',
+        steps:['Click your name at the top of the sidebar to open your profile.','Update the information you want to change (such as your personal details, profile photo, e-signature, or password).','Click Save.'],
+        expected:'Your changes will be saved successfully.' },
+      { id:4, type:'test', required:true, title:'ASN APPROVAL & REJECTION', short:'ASN Approval',
+        steps:['Navigate to the ASN tab.','Find the ASN you want to check, then click View.','Scroll down to the bottom of the page.','Choose Approve or Reject.'],
+        expected:'The ASN will be successfully approved or rejected, and the status will update accordingly.' },
+      { id:5, type:'test', required:true, title:'ADD MEDICAL SERVICE', short:'Add Service',
+        steps:['Go to the Medical Services tab.','Click Browse All Services.','Click + Add New Service.','Fill out the required details in the form.','Click Create.'],
+        expected:'The new service should be added successfully and appear in the list of services.' },
+      { id:6, type:'test', required:true, title:'EDIT MEDICAL SERVICE', short:'Edit Service',
+        steps:['Go to the Medical Services tab.','Click Browse All Services.','Find the service you want to update and click the vertical three-dot (⋮) button next to it.','Select Edit Service.','Update the information as needed.','Click Save Changes.'],
+        expected:'The service should be updated successfully, and the changes should appear in the list.' },
+      { id:7, type:'test', required:true, title:'DEACTIVATE MEDICAL SERVICE', short:'Deactivate Service',
+        steps:['Go to the Medical Services tab.','Click Browse All Services.','Find the service you want to deactivate and click the vertical three-dot (⋮) button next to it.','Select Deactivate.','Click Confirm.'],
+        expected:'The service should be deactivated successfully and no longer active in the list.' },
+      { id:8, type:'test', required:true, title:'ACTIVATE MEDICAL SERVICE', short:'Activate Service',
+        steps:['Go to the Medical Services tab.','Click Browse All Services.','Find the deactivated service and click the vertical three-dot (⋮) button next to it.','Select Activate.','Click Confirm.'],
+        expected:'The service should be activated successfully and appear as active in the list.' },
+      { id:9, type:'test', required:true, title:'DELETE MEDICAL SERVICE', short:'Delete Service',
+        steps:['Go to the Medical Services tab.','Click Browse All Services.','Find the service you want to delete and click the vertical three-dot (⋮) button next to it.','Select Delete.','Click Delete again to confirm.'],
+        expected:'The service should be deleted successfully and removed from the list.' },
+      { id:10, type:'test', required:true, title:'ADD MEDICAL SERVICE PACKAGE', short:'Add Package',
+        steps:['Go to the Medical Services tab.','Click Package Library.','Click + Add Package.','Fill out the required details in the form.','Click Create.'],
+        expected:'The package should be added successfully and appear in the Package Library.' },
+      { id:11, type:'test', required:true, title:'EDIT MEDICAL SERVICE PACKAGE', short:'Edit Package',
+        steps:['Go to the Medical Services tab.','Click Package Library.','Find the package you want to update and click the vertical three-dot (⋮) button next to it.','Select Edit.','Update the information as needed.','Click Save Changes.'],
+        expected:'The package should be updated successfully, and the changes should appear in the list.' },
+      { id:12, type:'test', required:true, title:'DEACTIVATE MEDICAL SERVICE PACKAGE', short:'Deactivate Package',
+        steps:['Go to the Medical Services tab.','Click Package Library.','Find the package you want to deactivate and click the vertical three-dot (⋮) button next to it.','Select Deactivate.','Click Confirm.'],
+        expected:'The package should be deactivated successfully and marked as inactive in the list.' },
+      { id:13, type:'test', required:true, title:'ACTIVATE MEDICAL SERVICE PACKAGE', short:'Activate Package',
+        steps:['Go to the Medical Services tab.','Click Package Library.','Find the package you want to activate and click the vertical three-dot (⋮) button next to it.','Select Activate.','Click Confirm.'],
+        expected:'The package should be activated successfully and appear as active in the list.' },
+      { id:14, type:'test', required:true, title:'ADD HMO', short:'Add HMO',
+        steps:['Go to the Medical Services tab.','Click HMO Management.','Click + Add HMO.','Fill out the required details in the form.','Click Create HMO.'],
+        expected:'The HMO should be added successfully and appear in the HMO Management list.' },
+      { id:15, type:'test', required:true, title:'DEACTIVATE HMO', short:'Deactivate HMO',
+        steps:['Go to the Medical Services tab.','Click HMO Management.','Find the HMO you want to deactivate in the list and click the vertical three-dot (⋮) button next to it.','Select Deactivate.','Click Confirm.'],
+        expected:'The HMO should be deactivated successfully and marked as inactive in the list.' },
+      { id:16, type:'test', required:true, title:'ACTIVATE HMO', short:'Activate HMO',
+        steps:['Go to the Medical Services tab.','Click HMO Management.','Find the HMO you want to activate in the list and click the vertical three-dot (⋮) button next to it.','Select Activate.','Click Confirm.'],
+        expected:'The HMO should be activated successfully and appear as active in the list.' },
+      { id:17, type:'test', required:true, title:'MANAGE HMO PACKAGES PRICES', short:'HMO Prices',
+        steps:['Go to the Medical Services tab.','Click HMO Management.','Find the HMO package you want to update and click Manage.','Update the prices or other details in the form.','Click Save Changes.'],
+        expected:'The HMO package prices should be saved successfully and reflected in the list.' },
+      { id:18, type:'test', required:true, title:'BUDGET SHEET APPROVAL & REJECTION', short:'Budget Sheet', note:'For Managing Directors only',
+        steps:['Go to the Budget Sheets tab.','Choose a company from the list.','Click View & Manage.','Click Approve or Reject.'],
+        expected:'The selected company or budget sheet should be approved or rejected by the director.' },
+      { id:19, type:'textarea', required:false, title:'DID YOU ENCOUNTER ANY OTHER ISSUES?', hint:'Please specify which feature is failing or has a problem.' },
+      { id:20, type:'file', required:false, title:'ATTACH SCREENSHOT (IF AVAILABLE)' },
+      { id:21, type:'textarea', required:false, title:'SUGGESTIONS FOR IMPROVEMENT', hint:'Please share any recommendations to improve the system.' },
+      { id:22, type:'final', required:true, title:'FINAL ACCEPTANCE', hint:'Based on your testing, do you approve this system for deployment?' },
+      { id:23, type:'textarea', required:false, title:'ADDITIONAL COMMENTS' }
     ];
 
-    // ─────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────
     // VIEW MANAGEMENT
-    // ─────────────────────────────────────────────────────────
-
+    // ─────────────────────────────────────────────
     let currentRole = null;
+    let unsubscribeAnalytics = null;
+    const chartInstances = {};
 
     function showView(id) {
-      ['view-home', 'view-form', 'view-success'].forEach(v => {
-        const el = document.getElementById(v);
-        if (v === 'view-form') {
-          el.style.display = (v === id) ? 'block' : 'none';
-        } else if (v === 'view-success') {
-          el.style.display = (v === id) ? 'flex' : 'none';
-        } else {
-          el.style.display = (v === id) ? 'flex' : 'none';
-        }
-      });
+      document.getElementById('view-home').style.display      = id === 'view-home'      ? 'flex'  : 'none';
+      document.getElementById('view-form').style.display      = id === 'view-form'      ? 'block' : 'none';
+      document.getElementById('view-success').style.display   = id === 'view-success'   ? 'flex'  : 'none';
+      document.getElementById('view-analytics').style.display = id === 'view-analytics' ? 'block' : 'none';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function goHome() {
+      if (unsubscribeAnalytics) { unsubscribeAnalytics(); unsubscribeAnalytics = null; }
+      destroyCharts();
       currentRole = null;
       showView('view-home');
     }
 
     function openForm(role) {
       currentRole = role;
-      const questions = role === 'sales' ? salesQuestions : managerQuestions;
-      const roleLabel = role === 'sales' ? 'Sales Team' : 'Supervisor / Director';
-
-      document.getElementById('form-role-label').textContent = roleLabel;
-      renderForm(questions, role);
+      const qs = role === 'sales' ? salesQuestions : managerQuestions;
+      document.getElementById('form-role-label').textContent = role === 'sales' ? 'Sales Team' : 'Supervisor / Director';
+      renderForm(qs, role);
       showView('view-form');
     }
 
-    // ─────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────
     // FORM RENDERING
-    // ─────────────────────────────────────────────────────────
-
+    // ─────────────────────────────────────────────
     function renderForm(questions, role) {
-      const body = document.getElementById('form-body');
-      const roleTitle = role === 'sales' ? 'Sales Team UAT Survey' : 'Supervisor / Director UAT Survey';
-      const roleSub = role === 'sales'
-        ? 'Please complete all test scenarios below and provide your assessment for each item.'
-        : 'Please complete all test scenarios below and provide your assessment for each item.';
-
+      const banner = role === 'sales' ? 'Sales Team UAT Survey' : 'Supervisor / Director UAT Survey';
       let html = `
         <div class="form-banner">
-          <div class="form-banner-title">${roleTitle}</div>
-          <div class="form-banner-sub">${roleSub}</div>
+          <div class="form-banner-title">${banner}</div>
+          <div class="form-banner-sub">Please complete all test scenarios below and provide your assessment for each item.</div>
         </div>
       `;
-
-      questions.forEach(q => {
-        html += renderQuestion(q, role);
-      });
-
+      questions.forEach(q => { html += renderQuestion(q); });
       html += `
         <div class="form-submit-area">
           <div class="form-error-msg" id="form-error-msg">Please answer all required fields before submitting.</div>
-          <button class="form-submit-btn" onclick="submitForm('${role}')">Submit Response →</button>
+          <button class="form-submit-btn" id="submit-btn" onclick="submitForm('${role}')">Submit Response →</button>
         </div>
       `;
+      document.getElementById('form-body').innerHTML = html;
 
-      body.innerHTML = html;
-
-      // File input listener
       questions.filter(q => q.type === 'file').forEach(q => {
-        const fileInput = document.getElementById(`file-input-${q.id}`);
-        const fileName  = document.getElementById(`file-name-${q.id}`);
-        if (fileInput && fileName) {
-          fileInput.addEventListener('change', () => {
-            if (fileInput.files.length > 0) {
-              fileName.textContent = fileInput.files[0].name;
-              fileName.style.display = 'block';
-            } else {
-              fileName.style.display = 'none';
-            }
+        const fi = document.getElementById(`file-input-${q.id}`);
+        const fn = document.getElementById(`file-name-${q.id}`);
+        if (fi && fn) {
+          fi.addEventListener('change', () => {
+            fn.textContent = fi.files.length > 0 ? '📎 ' + fi.files[0].name : '';
+            fn.style.display = fi.files.length > 0 ? 'block' : 'none';
           });
         }
       });
     }
 
-    function renderQuestion(q, role) {
-      const requiredStar = q.required ? '<span class="q-required-star">*</span>' : '';
-      const optionalTag  = !q.required ? '<span class="q-optional-tag">(Optional)</span>' : '';
-
+    function renderQuestion(q) {
+      const star = q.required ? '<span class="q-required-star">*</span>' : '';
+      const opt  = !q.required ? '<span class="q-optional-tag">(Optional)</span>' : '';
       let inner = '';
 
       if (q.type === 'text') {
-        inner = `
-          <input
-            class="q-input"
-            type="text"
-            id="q-${q.id}"
-            placeholder="Type your full name here…"
-          />
-        `;
-      }
-
-      else if (q.type === 'textarea') {
+        inner = `<input class="q-input" type="text" id="q-${q.id}" placeholder="Type your full name here…" />`;
+      } else if (q.type === 'textarea') {
         inner = `
           ${q.hint ? `<div class="q-hint">${q.hint}</div>` : ''}
-          <textarea
-            class="q-textarea"
-            id="q-${q.id}"
-            placeholder="Type your answer here…"
-          ></textarea>
+          <textarea class="q-textarea" id="q-${q.id}" placeholder="Type your answer here…"></textarea>
         `;
-      }
-
-      else if (q.type === 'file') {
+      } else if (q.type === 'file') {
         inner = `
           <div class="q-file-area">
             <input type="file" id="file-input-${q.id}" accept="image/*,.pdf" />
             <div class="q-file-icon">📎</div>
             <div class="q-file-text"><strong>Click to upload</strong> or drag and drop</div>
-            <div class="q-file-text" style="font-size:0.75rem;margin-top:0.2rem;">PNG, JPG, GIF, PDF (max 10MB)</div>
+            <div class="q-file-text" style="font-size:.75rem;margin-top:.2rem;">PNG, JPG, GIF, PDF (max 10MB) — auto-converted to WebP</div>
             <div class="q-file-name" id="file-name-${q.id}"></div>
           </div>
         `;
-      }
-
-      else if (q.type === 'test') {
-        const stepsHtml = q.steps.map((s, i) => `
+      } else if (q.type === 'test') {
+        const steps = q.steps.map((s,i) => `
           <div class="q-step">
-            <span class="q-step-num">${i + 1}</span>
-            <span>${escapeHtml(s)}</span>
-          </div>
-        `).join('');
-
-        const radioHtml = TEST_OPTIONS.map(opt => `
+            <span class="q-step-num">${i+1}</span>
+            <span>${escHtml(s)}</span>
+          </div>`).join('');
+        const radios = TEST_OPTIONS.map(opt => `
           <label class="q-radio-label" data-val="${opt}">
             <input type="radio" name="q-${q.id}" value="${opt}" />
             <span class="q-radio-circle"></span>
             <span class="q-radio-emoji">${TEST_EMOJIS[opt]}</span>
             <span>${opt}</span>
-          </label>
-        `).join('');
-
-        const noteHtml = q.note ? `<div style="margin-bottom:0.5rem;padding:0.45rem 0.85rem;background:#fef9ec;border:1px solid #fde68a;border-radius:8px;font-size:0.78rem;color:#92400e;font-weight:600;">⚠️ ${q.note}</div>` : '';
-
+          </label>`).join('');
+        const noteHtml = q.note ? `<div style="margin-bottom:.5rem;padding:.45rem .85rem;background:#fef9ec;border:1px solid #fde68a;border-radius:8px;font-size:.78rem;color:#92400e;font-weight:600;">⚠️ ${q.note}</div>` : '';
         inner = `
           ${noteHtml}
           <div class="q-steps-block">
             <div class="q-steps-header">Steps to Execute</div>
-            <div class="q-steps-body">${stepsHtml}</div>
+            <div class="q-steps-body">${steps}</div>
           </div>
-          <div class="q-expected">
-            <span class="q-expected-label">What should happen?</span>
-            ${escapeHtml(q.expected)}
-          </div>
-          <div class="q-radio-group" id="rg-${q.id}">
-            ${radioHtml}
-          </div>
-          <div class="q-hint" style="margin-top:0.5rem;">Respondents can select up to 1</div>
+          <div class="q-expected"><span class="q-expected-label">What should happen?</span>${escHtml(q.expected)}</div>
+          <div class="q-radio-group">${radios}</div>
+          <div class="q-hint" style="margin-top:.5rem;">Respondents can select up to 1</div>
         `;
-      }
-
-      else if (q.type === 'final') {
-        const radioHtml = FINAL_OPTIONS.map((opt, i) => `
+      } else if (q.type === 'final') {
+        const radios = FINAL_OPTIONS.map((o, i) => `
           <label class="q-radio-label">
-            <input type="radio" name="q-${q.id}" value="${opt}" />
+            <input type="radio" name="q-${q.id}" value="${o}" />
             <span class="q-radio-circle"></span>
-            <span class="q-radio-emoji">${i === 0 ? '✅' : '❌'}</span>
-            <span>${opt}</span>
-          </label>
-        `).join('');
-
+            <span class="q-radio-emoji">${i===0?'✅':'❌'}</span>
+            <span>${o}</span>
+          </label>`).join('');
         inner = `
-          ${q.hint ? `<div class="q-hint" style="margin-bottom:0.6rem;">${q.hint}</div>` : ''}
-          <div class="q-radio-group" id="rg-${q.id}">
-            ${radioHtml}
-          </div>
-          <div class="q-hint" style="margin-top:0.5rem;">Respondents can select up to 1</div>
+          ${q.hint ? `<div class="q-hint" style="margin-bottom:.6rem;">${q.hint}</div>` : ''}
+          <div class="q-radio-group">${radios}</div>
+          <div class="q-hint" style="margin-top:.5rem;">Respondents can select up to 1</div>
         `;
       }
 
       return `
         <div class="q-card" id="qcard-${q.id}">
           <div class="q-number">Question ${q.id}</div>
-          <div class="q-title">${q.title}${requiredStar}${optionalTag}</div>
+          <div class="q-title">${q.title}${star}${opt}</div>
           ${inner}
-        </div>
-      `;
+        </div>`;
     }
 
-    function escapeHtml(str) {
-      return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+    function escHtml(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
-    // ─────────────────────────────────────────────────────────
-    // FORM SUBMISSION & VALIDATION
-    // ─────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────
+    // WEBP CONVERSION
+    // ─────────────────────────────────────────────
+    async function convertToWebP(file) {
+      return new Promise((resolve, reject) => {
+        // Non-image files (PDF) pass through
+        if (!file.type.startsWith('image/')) { resolve(file); return; }
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width  = img.width;
+          canvas.height = img.height;
+          canvas.getContext('2d').drawImage(img, 0, 0);
+          canvas.toBlob(blob => {
+            URL.revokeObjectURL(url);
+            if (blob) resolve(blob);
+            else { URL.revokeObjectURL(url); resolve(file); }
+          }, 'image/webp', 0.85);
+        };
+        img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+        img.src = url;
+      });
+    }
 
-    function submitForm(role) {
+    async function uploadScreenshot(file, role, docId) {
+      const blob = await convertToWebP(file);
+      const ext  = file.type.startsWith('image/') ? 'webp' : 'pdf';
+      const ref  = storage.ref(`screenshots/${role}/${docId}.${ext}`);
+      const snap = await ref.put(blob, { contentType: file.type.startsWith('image/') ? 'image/webp' : file.type });
+      return await snap.ref.getDownloadURL();
+    }
+
+    // ─────────────────────────────────────────────
+    // FORM SUBMISSION
+    // ─────────────────────────────────────────────
+    async function submitForm(role) {
       const questions = role === 'sales' ? salesQuestions : managerQuestions;
       let hasError = false;
-      const responses = {};
+      const answers = {};
 
-      // Reset errors
-      questions.forEach(q => {
-        const card = document.getElementById(`qcard-${q.id}`);
-        if (card) card.classList.remove('required-error');
-      });
+      questions.forEach(q => document.getElementById(`qcard-${q.id}`)?.classList.remove('required-error'));
 
       questions.forEach(q => {
         const card = document.getElementById(`qcard-${q.id}`);
-
         if (q.type === 'text') {
-          const el = document.getElementById(`q-${q.id}`);
-          const val = el ? el.value.trim() : '';
-          responses[q.id] = val;
-          if (q.required && !val) {
-            if (card) card.classList.add('required-error');
-            hasError = true;
-          }
-        }
-
-        else if (q.type === 'textarea') {
-          const el = document.getElementById(`q-${q.id}`);
-          responses[q.id] = el ? el.value.trim() : '';
-          // optional — no error
-        }
-
-        else if (q.type === 'file') {
-          const el = document.getElementById(`file-input-${q.id}`);
-          responses[q.id] = (el && el.files.length > 0) ? el.files[0].name : '';
-          // optional
-        }
-
-        else if (q.type === 'test' || q.type === 'final') {
-          const selected = document.querySelector(`input[name="q-${q.id}"]:checked`);
-          responses[q.id] = selected ? selected.value : '';
-          if (q.required && !selected) {
-            if (card) card.classList.add('required-error');
-            hasError = true;
-          }
+          const v = document.getElementById(`q-${q.id}`)?.value.trim() || '';
+          answers[q.id] = v;
+          if (q.required && !v) { card?.classList.add('required-error'); hasError = true; }
+        } else if (q.type === 'textarea') {
+          answers[q.id] = document.getElementById(`q-${q.id}`)?.value.trim() || '';
+        } else if (q.type === 'test' || q.type === 'final') {
+          const sel = document.querySelector(`input[name="q-${q.id}"]:checked`);
+          answers[q.id] = sel ? sel.value : '';
+          if (q.required && !sel) { card?.classList.add('required-error'); hasError = true; }
+        } else if (q.type === 'file') {
+          answers[q.id] = ''; // will fill after upload
         }
       });
 
       const errMsg = document.getElementById('form-error-msg');
-
       if (hasError) {
-        if (errMsg) errMsg.style.display = 'block';
-        // Scroll to first error
-        const firstError = document.querySelector('.required-error');
-        if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        errMsg.style.display = 'block';
+        document.querySelector('.required-error')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      errMsg.style.display = 'none';
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Submitting…';
+
+      try {
+        const fileQ = questions.find(q => q.type === 'file');
+        const fileInput = fileQ ? document.getElementById(`file-input-${fileQ.id}`) : null;
+        const hasFile   = fileInput && fileInput.files.length > 0;
+
+        // Pre-create doc ref for consistent ID before upload
+        const docRef = db.collection('surveys').doc();
+
+        if (hasFile) {
+          const url = await uploadScreenshot(fileInput.files[0], role, docRef.id);
+          answers[fileQ.id] = url;
+        }
+
+        const fullName   = answers[1] || 'Unknown';
+        const finalQId   = questions.find(q => q.type === 'final')?.id;
+        const finalAns   = finalQId ? answers[finalQId] : '';
+        const approved   = finalAns.startsWith('Yes');
+
+        await docRef.set({
+          role,
+          fullName,
+          approved,
+          submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          answers
+        });
+
+        showView('view-success');
+      } catch (err) {
+        console.error('Submission failed:', err);
+        btn.disabled = false;
+        btn.textContent = 'Submit Response →';
+        errMsg.textContent = 'Submission failed. Please check your connection and try again.';
+        errMsg.style.display = 'block';
+      }
+    }
+
+    // ─────────────────────────────────────────────
+    // PASSWORD MODAL
+    // ─────────────────────────────────────────────
+    function openPasswordModal() {
+      document.getElementById('modal-password').classList.add('open');
+      document.getElementById('pwd-input').value = '';
+      document.getElementById('pwd-error').style.display = 'none';
+      setTimeout(() => document.getElementById('pwd-input').focus(), 100);
+    }
+    function closePasswordModal() {
+      document.getElementById('modal-password').classList.remove('open');
+    }
+    function checkPassword() {
+      const input = document.getElementById('pwd-input');
+      if (input.value === ADMIN_PASSWORD) {
+        closePasswordModal();
+        loadAnalytics();
+      } else {
+        document.getElementById('pwd-error').style.display = 'block';
+        input.classList.add('shake');
+        setTimeout(() => input.classList.remove('shake'), 450);
+        input.value = '';
+        input.focus();
+      }
+    }
+
+    // ─────────────────────────────────────────────
+    // ANALYTICS
+    // ─────────────────────────────────────────────
+    let allResponses = [];
+
+    function loadAnalytics() {
+      showView('view-analytics');
+      destroyCharts();
+
+      // Show loading spinners
+      ['sales','manager'].forEach(r => {
+        document.getElementById(`tab-content-${r}`).innerHTML = '<div class="analytics-loading"><div class="spinner"></div></div>';
+      });
+
+      if (unsubscribeAnalytics) unsubscribeAnalytics();
+
+      unsubscribeAnalytics = db.collection('surveys')
+        .orderBy('submittedAt', 'desc')
+        .onSnapshot(snap => {
+          allResponses = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          renderAnalytics(allResponses);
+          const now = new Date();
+          document.getElementById('analytics-updated').textContent =
+            'Updated ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }, err => {
+          console.error(err);
+          ['sales','manager'].forEach(r => {
+            document.getElementById(`tab-content-${r}`).innerHTML = `
+              <div class="empty-state">
+                <div class="empty-state-icon">⚠️</div>
+                <div class="empty-state-title">Could not load data</div>
+                <div class="empty-state-sub">Check your Firestore security rules and internet connection.<br><small style="font-family:monospace;color:#ef4444">${err.message}</small></div>
+              </div>`;
+          });
+        });
+    }
+
+    function renderAnalytics(responses) {
+      const sales   = responses.filter(r => r.role === 'sales');
+      const manager = responses.filter(r => r.role === 'manager');
+
+      // Overview
+      const totalApproved = responses.filter(r => r.approved).length;
+      const approvalRate  = responses.length > 0 ? Math.round(totalApproved / responses.length * 100) : 0;
+      document.getElementById('ov-total').textContent   = responses.length;
+      document.getElementById('ov-sales').textContent   = sales.length;
+      document.getElementById('ov-manager').textContent = manager.length;
+      document.getElementById('ov-approval').textContent = approvalRate + '%';
+
+      destroyCharts();
+
+      renderRoleTab('sales',   sales,   salesQuestions);
+      renderRoleTab('manager', manager, managerQuestions);
+    }
+
+    function renderRoleTab(role, responses, questions) {
+      const el = document.getElementById(`tab-content-${role}`);
+
+      if (responses.length === 0) {
+        el.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <div class="empty-state-title">No responses yet</div>
+            <div class="empty-state-sub">No ${role === 'sales' ? 'Sales' : 'Manager'} submissions have been recorded.</div>
+          </div>`;
         return;
       }
 
-      if (errMsg) errMsg.style.display = 'none';
+      const testQs    = questions.filter(q => q.type === 'test');
+      const finalQ    = questions.find(q => q.type === 'final');
+      const issuesQ   = questions.find(q => q.type === 'textarea' && q.title.includes('OTHER ISSUES'));
+      const suggestQ  = questions.find(q => q.type === 'textarea' && q.title.includes('SUGGESTIONS'));
+      const commentQ  = questions.find(q => q.type === 'textarea' && q.title.includes('COMMENTS'));
+      const fileQ     = questions.find(q => q.type === 'file');
 
-      // Log collected data (connect to backend as needed)
-      console.log('[UAT Form Submitted]', { role, responses });
+      // Calc overall test stats
+      let totalPass = 0, totalFail = 0, totalNA = 0;
+      testQs.forEach(q => {
+        responses.forEach(r => {
+          const v = r.answers?.[q.id];
+          if (v === 'Pass') totalPass++;
+          else if (v === 'Fail') totalFail++;
+          else if (v === 'N/A') totalNA++;
+        });
+      });
+      const testTotal    = totalPass + totalFail + totalNA;
+      const overallPass  = testTotal > 0 ? Math.round(totalPass / testTotal * 100) : 0;
 
-      showView('view-success');
+      // Calc approval
+      const approved     = responses.filter(r => r.approved).length;
+      const notApproved  = responses.length - approved;
+      const approvalRate = responses.length > 0 ? Math.round(approved / responses.length * 100) : 0;
+
+      // Average pass rate per question
+      let html = `
+        <div class="role-header">
+          <span class="role-title">${role === 'sales' ? '📋 Sales' : '🧑‍💼 Manager'} Analytics</span>
+          <span class="role-badge">${responses.length} Response${responses.length !== 1 ? 's' : ''}</span>
+        </div>
+
+        <div class="mini-stats">
+          <div class="mini-stat">
+            <div class="mini-stat-val blue">${responses.length}</div>
+            <div class="mini-stat-label">Total Responses</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-val ${overallPass >= 80 ? 'green' : overallPass >= 50 ? '' : 'red'}">${overallPass}%</div>
+            <div class="mini-stat-label">Overall Pass Rate</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-val ${approvalRate >= 80 ? 'green' : approvalRate >= 50 ? '' : 'red'}">${approvalRate}%</div>
+            <div class="mini-stat-label">Approval Rate</div>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-card-title">Overall Test Results</div>
+            <div class="chart-canvas-wrap">
+              <canvas id="chart-test-${role}" height="220"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-title">Final Acceptance</div>
+            <div class="chart-canvas-wrap">
+              <canvas id="chart-approval-${role}" height="220"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="breakdown-card">
+          <div class="breakdown-title">Test Scenario Results — per question</div>
+          ${testQs.map(q => {
+            const p = responses.filter(r => r.answers?.[q.id] === 'Pass').length;
+            const f = responses.filter(r => r.answers?.[q.id] === 'Fail').length;
+            const n = responses.filter(r => r.answers?.[q.id] === 'N/A').length;
+            const tot = p + f + n;
+            const pp = tot > 0 ? Math.round(p/tot*100) : 0;
+            const fp = tot > 0 ? Math.round(f/tot*100) : 0;
+            const np = Math.max(0, 100 - pp - fp);
+            const rateClass = pp >= 80 ? 'good' : pp >= 50 ? 'warn' : tot === 0 ? 'na' : 'bad';
+            return `
+              <div class="qa-row">
+                <div class="qa-label">
+                  <span class="qa-label-num">Q${q.id}</span>
+                  ${q.short || q.title}
+                </div>
+                <div class="qa-bar-wrap">
+                  <div class="qa-bar">
+                    <div class="qa-bar-pass" style="width:${pp}%"></div>
+                    <div class="qa-bar-fail" style="width:${fp}%"></div>
+                    <div class="qa-bar-na"   style="width:${np}%"></div>
+                  </div>
+                  <div class="qa-bar-counts">
+                    <span class="p">✅ ${p} Pass</span>
+                    <span class="f">❌ ${f} Fail</span>
+                    <span class="n">— ${n} N/A</span>
+                  </div>
+                </div>
+                <div class="qa-rate ${rateClass}">${tot === 0 ? '—' : pp + '%'}</div>
+              </div>`;
+          }).join('')}
+        </div>
+      `;
+
+      // Open text responses
+      const issuesList = responses.filter(r => r.answers?.[issuesQ?.id]).map(r =>
+        `<div class="text-response-item">
+          <span class="text-response-name">${escHtml(r.fullName || 'Unknown')}</span>
+          <span class="text-response-text">${escHtml(r.answers[issuesQ.id])}</span>
+        </div>`).join('') || '<div class="text-empty">No issues reported.</div>';
+
+      const suggestList = responses.filter(r => r.answers?.[suggestQ?.id]).map(r =>
+        `<div class="text-response-item">
+          <span class="text-response-name">${escHtml(r.fullName || 'Unknown')}</span>
+          <span class="text-response-text">${escHtml(r.answers[suggestQ.id])}</span>
+        </div>`).join('') || '<div class="text-empty">No suggestions provided.</div>';
+
+      const commentList = responses.filter(r => r.answers?.[commentQ?.id]).map(r =>
+        `<div class="text-response-item">
+          <span class="text-response-name">${escHtml(r.fullName || 'Unknown')}</span>
+          <span class="text-response-text">${escHtml(r.answers[commentQ.id])}</span>
+        </div>`).join('') || '<div class="text-empty">No additional comments.</div>';
+
+      // Screenshots
+      const screenshots = responses.filter(r => r.answers?.[fileQ?.id]);
+      const screenshotsHtml = screenshots.length > 0
+        ? `<div class="text-responses-card">
+            <div class="text-section-title">📸 Attached Screenshots (${screenshots.length})</div>
+            <div style="display:flex;flex-wrap:wrap;gap:.65rem;margin-top:.5rem;">
+              ${screenshots.map(r => `
+                <div style="text-align:center">
+                  <img class="screenshot-thumb" src="${r.answers[fileQ.id]}" alt="Screenshot by ${escHtml(r.fullName||'')}"
+                    onclick="openLightbox('${r.answers[fileQ.id]}')" title="${escHtml(r.fullName||'Unknown')}" />
+                  <div style="font-size:.65rem;color:var(--muted);margin-top:.25rem;">${escHtml(r.fullName||'Unknown')}</div>
+                </div>`).join('')}
+            </div>
+          </div>` : '';
+
+      html += `
+        <div class="text-responses-card">
+          <div class="text-section-title">⚠️ Issues Reported (${responses.filter(r=>r.answers?.[issuesQ?.id]).length})</div>
+          ${issuesList}
+        </div>
+        <div class="text-responses-card">
+          <div class="text-section-title">💡 Suggestions for Improvement (${responses.filter(r=>r.answers?.[suggestQ?.id]).length})</div>
+          ${suggestList}
+        </div>
+        <div class="text-responses-card">
+          <div class="text-section-title">💬 Additional Comments (${responses.filter(r=>r.answers?.[commentQ?.id]).length})</div>
+          ${commentList}
+        </div>
+        ${screenshotsHtml}
+      `;
+
+      // Individual responses
+      html += `
+        <div class="indiv-card">
+          <div class="indiv-card-title">Individual Responses (${responses.length})</div>
+          ${responses.map((r, idx) => {
+            const ts = r.submittedAt?.toDate ? r.submittedAt.toDate() : null;
+            const dateStr = ts ? ts.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' ' + ts.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) : 'Pending…';
+            const approvClass = r.approved ? 'yes' : 'no';
+            const approvTxt   = r.approved ? '✅ Approved' : '❌ Not Approved';
+            const testAnswers = testQs.map(q => {
+              const v = r.answers?.[q.id] || '—';
+              const cls = v === 'Pass' ? 'pass' : v === 'Fail' ? 'fail' : 'na';
+              return `<div class="indiv-answer">
+                <div class="indiv-answer-q">Q${q.id}</div>
+                <div class="indiv-answer-v ${cls}">${v}</div>
+              </div>`;
+            }).join('');
+            const extraAnswers = [issuesQ, suggestQ, commentQ].filter(Boolean).map(q => {
+              const v = r.answers?.[q.id];
+              if (!v) return '';
+              return `<div style="margin-top:.5rem;font-size:.8rem;"><strong style="color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;">${q.title.replace('DID YOU ENCOUNTER ANY OTHER ISSUES?','Issues').replace('SUGGESTIONS FOR IMPROVEMENT','Suggestions').replace('ADDITIONAL COMMENTS','Comments')}</strong><br>${escHtml(v)}</div>`;
+            }).join('');
+            return `
+              <div class="indiv-row" id="indiv-${role}-${idx}">
+                <div class="indiv-row-header" onclick="toggleIndiv('${role}-${idx}')">
+                  <span class="indiv-name">${escHtml(r.fullName || 'Unknown')}</span>
+                  <span class="indiv-date">${dateStr}</span>
+                  <span class="indiv-approval ${approvClass}">${approvTxt}</span>
+                  <span class="indiv-toggle">▼</span>
+                </div>
+                <div class="indiv-details">
+                  <div class="indiv-answers-grid">${testAnswers}</div>
+                  ${extraAnswers}
+                  ${r.answers?.[fileQ?.id] ? `<div style="margin-top:.65rem"><img class="screenshot-thumb" src="${r.answers[fileQ.id]}" onclick="openLightbox('${r.answers[fileQ.id]}')" /></div>` : ''}
+                </div>
+              </div>`;
+          }).join('')}
+        </div>
+      `;
+
+      el.innerHTML = html;
+
+      // Create Chart.js doughnuts after DOM is ready
+      requestAnimationFrame(() => {
+        chartInstances[`test-${role}`] = new Chart(
+          document.getElementById(`chart-test-${role}`),
+          { type: 'doughnut',
+            data: {
+              labels: ['Pass', 'Fail', 'N/A'],
+              datasets: [{ data: [totalPass, totalFail, totalNA], backgroundColor: ['#22c55e','#ef4444','#94a3b8'], borderWidth: 0, hoverOffset: 6 }]
+            },
+            options: { cutout: '68%', plugins: { legend: { position:'bottom', labels:{ padding:14, font:{ size:12, family:"'DM Sans', sans-serif" } } } }, responsive: true }
+          }
+        );
+        chartInstances[`approval-${role}`] = new Chart(
+          document.getElementById(`chart-approval-${role}`),
+          { type: 'doughnut',
+            data: {
+              labels: ['Approved', 'Not Approved'],
+              datasets: [{ data: [approved, notApproved], backgroundColor: ['#22c55e','#ef4444'], borderWidth: 0, hoverOffset: 6 }]
+            },
+            options: { cutout: '68%', plugins: { legend: { position:'bottom', labels:{ padding:14, font:{ size:12, family:"'DM Sans', sans-serif" } } } }, responsive: true }
+          }
+        );
+      });
     }
 
-    // ─────────────────────────────────────────────────────────
-    // INIT
-    // ─────────────────────────────────────────────────────────
+    function destroyCharts() {
+      Object.keys(chartInstances).forEach(k => {
+        try { chartInstances[k].destroy(); } catch(e) {}
+        delete chartInstances[k];
+      });
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.atab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+      document.querySelectorAll('.atab-content').forEach(c => c.classList.toggle('active', c.dataset.tab === tab));
+    }
+
+    function toggleIndiv(id) {
+      const row = document.getElementById(`indiv-${id}`);
+      if (row) row.classList.toggle('open');
+    }
+
+    // Lightbox
+    function openLightbox(url) {
+      document.getElementById('lightbox-img').src = url;
+      document.getElementById('lightbox').classList.add('open');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.getElementById('lightbox-img').src = '';
+    }
+
+    // Init
     showView('view-home');
   </script>
 </body>
